@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Scanner;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -19,9 +20,9 @@ import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
 
 public class HorarioLoader {
-	
-	// Classe funcional 
-	
+
+	// Classe funcional
+
 	// Apenas contem funcional o ponto 1. e 2. do projeto
 
 	public static void main(String[] args) {
@@ -33,13 +34,28 @@ public class HorarioLoader {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					// Carregar horário a partir de um arquivo CSV
-					// Antes de correr introduzir a diretoria local onde se encontra o ficheiro horario-exemplo.csv
-					String csvFilePath = "/Users/pedrofs/ES2023LETIGrupoJ/horario-exemplo.csv";
+					// O codigo seguinte pede ao utilizador que indique a diretoria onde contem o
+					// ficheiro 'horario-exemplo.csv' e tambem para o ficheiro
+					// 'SalasDeAulaPorTiposDeSala.html'
+					// De seguida o codigo grava no ficheiro 'SalasDeAulaPorTiposDeSala.html'
+					// Para facilitar cada elemento do grupo pode comentar a sua diretoria aqui
+					// PFS: 'horario-exemplo.csv' |  /Users/pedrofs/ES2023LETIGrupoJ/horario-exemplo.csv
+					// PFS: 'SalasDeAulaPorTiposDeSala.html' |  /Users/pedrofs/ES2023LETIGrupoJ/SalasDeAulaPorTiposDeSala.html				
+
+					Scanner scanner = new Scanner(System.in);
+
+					System.out.print(
+							"Indique na consola a diretoria onde contem do arquivo 'horario-exemplo.csv' na sua máquina local seguido de enter: ");
+					String csvFilePath = scanner.nextLine();
+
 					String htmlContent = loadHorarioFromCSV_OK(csvFilePath);
 
 					// Salvar o conteúdo HTML em um arquivo
-					// Antes de correr introduzir a diretoria local onde se encontra o ficheiro SalasDeAulaPorTiposDeSala_PFS.htm
-					String htmlFilePath = "/Users/pedrofs/ES2023LETIGrupoJ/SalasDeAulaPorTiposDeSala.html";
+
+					System.out.print(
+							"Indique na consola a diretoria onde contem do arquivo 'SalasDeAulaPorTiposDeSala.html' na sua máquina local: ");
+					
+					String htmlFilePath = scanner.nextLine();
 					saveHTMLToFile(htmlFilePath, htmlContent);
 
 					// Abrir o arquivo HTML em um navegador da web
@@ -71,24 +87,22 @@ public class HorarioLoader {
 				String[] values = line.split(";");
 				records.add(Arrays.asList(values));
 			}
-		}		
-		
-		
+		}
+
 		StringBuilder htmlContent = new StringBuilder();
 		htmlContent.append("<html><body><table border='1'>");
-		
+
 		for (Iterator rowIterator = records.iterator(); rowIterator.hasNext();) {
 			List<String> row = (List<String>) rowIterator.next();
 			htmlContent.append("<tr>");
 			for (Iterator columnIterator = row.iterator(); columnIterator.hasNext();) {
 				String column = (String) columnIterator.next();
-				htmlContent.append("<td>").append(column).append("</td>");	
+				htmlContent.append("<td>").append(column).append("</td>");
 			}
 			htmlContent.append("</tr>");
 		}
 		htmlContent.append("</table></body></html>");
-		
-		
+
 		return htmlContent.toString();
 	}
 

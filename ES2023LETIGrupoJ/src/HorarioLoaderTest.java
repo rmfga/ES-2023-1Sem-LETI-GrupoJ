@@ -17,25 +17,25 @@ import static org.junit.Assert.assertTrue;
 public class HorarioLoaderTest {
 	
 	//Strings necessarias
-    private String testCsvFilePath;
-    private String testHtmlFilePath;
+    private String testCsvFile;
+    private String testHtmlFile;
 
     @Before
     public void setUp() {
-        testCsvFilePath = "test-horario.csv";
-        testHtmlFilePath = "test-output.html";
+        testCsvFile = "teste-horario.csv";
+        testHtmlFile = "teste-HTML.html";
     }
 
     @Test
     public void testLoadHorarioFromCSVAndCompareWithCSVFile() throws IOException, CsvException {
         // Cria um ficheiro CSV apenas usado para teste
-        createSampleCSVFile(testCsvFilePath);
+        createCSVFile(testCsvFile);
 
         // Resultado esperado do loadHorarioFromCSV_OK
-        String expectedHtml = "<html><body><table border='1'><tr><td>Test</td></tr></table></body></html>";
+        String expectedHtml = "<html><body><table border='1'><tr><td>Teste JUnit Projeto</td></tr></table></body></html>";
 
         // Dar run ao loadHorarioFromCSV_OK e obtem o seu conteudo em String
-        String actualHtml = HorarioLoader.loadHorarioFromCSV_OK(testCsvFilePath);
+        String actualHtml = HorarioLoader.loadHorarioFromCSV_OK(testCsvFile);
 
         // Compara o conteudo HTML com o esperado
         assertEquals(expectedHtml, actualHtml);
@@ -47,22 +47,22 @@ public class HorarioLoaderTest {
         String expectedHtml = "<html><body><p>Test content</p></body></html>";
 
         // Testamos a função de salvar o HTML num ficheiro
-        HorarioLoader.saveHTMLToFile(testHtmlFilePath, expectedHtml);
+        HorarioLoader.saveHTMLToFile(testHtmlFile, expectedHtml);
 
         // Comparamos os conteudos
-        String actualHtml = loadFileAsString(testHtmlFilePath);
+        String actualHtml = fileAsString(testHtmlFile);
         assertEquals(expectedHtml, actualHtml);
     }
 
     // Cria um ficheiro CSV para testar
-    private void createSampleCSVFile(String filePath) throws IOException {
+    private void createCSVFile(String filePath) throws IOException {
         try (FileWriter writer = new FileWriter(filePath)) {
-            writer.write("Test");
+            writer.write("Teste JUnit Projeto");
         }
     }
 
     // Cria uma String com o conteudo do ficheiro
-    private String loadFileAsString(String filePath) throws IOException {
+    private String fileAsString(String filePath) throws IOException {
         Path path = Paths.get(filePath);
         return Files.readString(path);
     }

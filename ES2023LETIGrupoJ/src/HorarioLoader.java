@@ -83,6 +83,10 @@ public class HorarioLoader {
 	}
 
 	public static String loadHorarioFromCSV_OK(String csvFilePath) throws IOException, CsvException {
+		if (csvFilePath == null || csvFilePath.isEmpty()) {
+			System.out.println("O caminho para o ficheiro CSV não pode ser nulo ou vazio.");
+			return null;
+		}
 		List<List<String>> records = new ArrayList<>();
 		try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
 			String line;
@@ -110,6 +114,10 @@ public class HorarioLoader {
 	}
 
 	public static void saveHTMLToFile(String htmlFilePath, String htmlContent) throws IOException {
+		if (htmlContent == null || htmlContent.isEmpty()) {
+			System.out.println("O conteúdo do ficheiro HTML não pode ser nulo ou vazio.");
+			return ;
+		}
 	    try (FileWriter writer = new FileWriter(htmlFilePath)) {
 	        writer.write(htmlContent);
 	    }

@@ -1,9 +1,18 @@
-//
-//    // Helper method to load the content of a file as a string
-//    private String loadFileAsString(String filePath) throws IOException {
-//        return new String(Files.readAllBytes(Paths.get(filePath)));
-//    }
-//}
+import org.junit.Before;
+import org.junit.Test;
+
+import com.opencsv.exceptions.CsvException;
+import java.nio.file.Path;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+
+import java.io.FileWriter;
+import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class HorarioLoaderTest {
 
@@ -18,40 +27,40 @@ public class HorarioLoaderTest {
 
     @Test
     public void testLoadHorarioFromCSVAndCompareWithCSVFile() throws IOException, CsvException {
-        // Create a sample CSV file for testing
+        // Cria um ficheiro CSV apenas usado para teste
         createSampleCSVFile(testCsvFilePath);
 
-        // Load the HTML content from the test CSV file
+        // Resultado esperado do loadHorarioFromCSV_OK
         String expectedHtml = "<html><body><table border='1'><tr><td>Test</td></tr></table></body></html>";
 
-        // Run the loadHorarioFromCSV_OK method
+        // Dar run ao loadHorarioFromCSV_OK e obtem o seu conteudo em String
         String actualHtml = HorarioLoader.loadHorarioFromCSV_OK(testCsvFilePath);
 
-        // Compare the HTML content with the expected HTML
+        // Compara o conteudo HTML com o esperado
         assertEquals(expectedHtml, actualHtml);
     }
 
     @Test
     public void testSaveHTMLToFileAndCompareWithHTMLFile() throws IOException {
-        // Generate a sample HTML content for testing
+        // Criamos uma String de HTML
         String expectedHtml = "<html><body><p>Test content</p></body></html>";
 
-        // Save the HTML content to the test HTML file
+        // Testamos a função de salvar o HTML num ficheiro
         HorarioLoader.saveHTMLToFile(testHtmlFilePath, expectedHtml);
 
-        // Compare the HTML content with the content from the HTML file
+        // Comparamos os conteudos
         String actualHtml = loadFileAsString(testHtmlFilePath);
         assertEquals(expectedHtml, actualHtml);
     }
 
-    // Helper method to create a sample CSV file for testing
+    // Cria um ficheiro CSV para testar
     private void createSampleCSVFile(String filePath) throws IOException {
         try (FileWriter writer = new FileWriter(filePath)) {
             writer.write("Test");
         }
     }
 
-    // Helper method to load the content of a file as a string
+    // Cria uma String com o conteudo do ficheiro
     private String loadFileAsString(String filePath) throws IOException {
         Path path = Paths.get(filePath);
         return Files.readString(path);

@@ -40,14 +40,17 @@ public class HorarioLoader {
 					// De seguida o codigo grava no ficheiro 'SalasDeAulaPorTiposDeSala.html'
 					// Para facilitar cada elemento do grupo pode comentar a sua diretoria aqui
 					// PFS: 'horario-exemplo.csv' |  /Users/pedrofs/ES2023LETIGrupoJ/horario-exemplo.csv
-					// PFS: 'SalasDeAulaPorTiposDeSala.html' |  /Users/pedrofs/ES2023LETIGrupoJ/SalasDeAulaPorTiposDeSala.html				
+					// PFS: 'SalasDeAulaPorTiposDeSala.html' |  /Users/pedrofs/ES2023LETIGrupoJ/SalasDeAulaPorTiposDeSala.html
+					// Vasco: 'horario-exemplo.csv' |  C:/Users/vasco/OneDrive/Documentos/FicheirosES/horario-exemplo.csv
+					// Vasco: 'SalasDeAulaPorTiposDeSala.html' |  C:/Users/vasco/OneDrive/Documentos/FicheirosES/SalasDeAulaPorTiposDeSala.html
+
 
 					Scanner scanner = new Scanner(System.in);
 
 					System.out.print(
 							"Indique na consola a diretoria onde contem do arquivo 'horario-exemplo.csv' na sua máquina local seguido de enter: ");
 					String csvFilePath = scanner.nextLine();
-
+					
 					String htmlContent = loadHorarioFromCSV_OK(csvFilePath);
 
 					// Salvar o conteúdo HTML em um arquivo
@@ -107,8 +110,8 @@ public class HorarioLoader {
 	}
 
 	public static void saveHTMLToFile(String htmlFilePath, String htmlContent) throws IOException {
-		try (CSVWriter writer = new CSVWriter(new FileWriter(htmlFilePath))) {
-			writer.writeNext(new String[] { htmlContent });
-		}
+	    try (FileWriter writer = new FileWriter(htmlFilePath)) {
+	        writer.write(htmlContent);
+	    }
 	}
 }

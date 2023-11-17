@@ -27,11 +27,11 @@ public class HorarioLoaderTest {
         // Cria um ficheiro CSV apenas usado para teste
         createCSVFile(testeCsvFile);
 
-        // Resultado esperado do loadHorarioFromCSV_OK
+        // Resultado esperado do loadHorarioFromCSV
         String expectedHtml = "<html><body><table border='1'><tr><td>Teste JUnit Projeto</td></tr></table></body></html>";
 
-        // Dar run ao loadHorarioFromCSV_OK e obtem o seu conteudo em String
-        String actualHtml = HorarioLoader.loadHorarioFromCSV_OK(testeCsvFile);
+        // Dar run ao loadHorarioFromCSV e obtem o seu conteudo em String
+        String actualHtml = HorarioLoader.loadHorarioFromCSV(testeCsvFile);
 
         // Compara o conteudo HTML com o esperado
         assertEquals(expectedHtml, actualHtml);
@@ -51,18 +51,18 @@ public class HorarioLoaderTest {
     }
     
 
-    //Verifica se o método loadHorarioFromCSV_OK retorna
+	// Verifica se o método loadHorarioFromCSV retorna
     //nulo quando o caminho para o arquivo CSV é nulo.
     @Test
     public void testLoadHorarioFromCSVWithNullCsvFilePath() throws IOException, CsvException {
-        assertNull(HorarioLoader.loadHorarioFromCSV_OK(null));
+        assertNull(HorarioLoader.loadHorarioFromCSV(null));
     }
 
-    //Verifica se o método loadHorarioFromCSV_OK retorna
+    //Verifica se o método loadHorarioFromCSV retorna
     //nulo quando o caminho para o arquivo CSV é vazio. 
     @Test
     public void testLoadHorarioFromCSVWithEmptyCsvFilePath() throws IOException, CsvException {
-        assertNull(HorarioLoader.loadHorarioFromCSV_OK(""));
+        assertNull(HorarioLoader.loadHorarioFromCSV(""));
     }
 
     //Verifica se o método saveHTMLToFile não cria 

@@ -1,3 +1,5 @@
+package mapeamento;
+
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,20 +12,38 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Scanner;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
-
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
 
+//Este package contem implementado os pontos 3. e 4. do projeto.
+//O objetivo é existir um mapeamento entre os campos dos ficheiros CSV e os campos correspondentes definidos no código da aplicação.
+
 public class HorarioLoader {
+	
+	// Mapeamento entre os campos no arquivo CSV e os campos na aplicação
+    private static final Map<String, String> CAMPO_MAP = new HashMap<>();
 
-	// Classe funcional
-
-	// Apenas contem funcional o ponto 1. e 2. do projeto
+    static {
+        // Mapeamento inicial
+		CAMPO_MAP.put("Curso", "coluna0");
+        CAMPO_MAP.put("Unidade Curricular", "coluna1");
+        CAMPO_MAP.put("Turno", "coluna2");
+        CAMPO_MAP.put("Turma", "coluna3");
+        CAMPO_MAP.put("Inscritos no turno", "coluna4");
+        CAMPO_MAP.put("Dia da semana", "coluna5");
+        CAMPO_MAP.put("Hora início da aula", "coluna6");
+        CAMPO_MAP.put("Hora fim da aula", "coluna7");
+        CAMPO_MAP.put("Data da aula", "coluna8");
+        CAMPO_MAP.put("Características da sala pedida para a aula", "coluna9");
+        CAMPO_MAP.put("Sala atribuída à aula", "coluna10");
+        
+    }
 
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("A Minha Aplicação");
@@ -91,7 +111,7 @@ public class HorarioLoader {
 		System.out.println("Working Directory = " + System.getProperty("user.dir"));
 	}
 
-////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
 
 	public static String loadHorarioFromCSV(String csvFilePath) throws IOException, CsvException {
 		List<List<String>> records = new ArrayList<>();
@@ -123,9 +143,12 @@ public class HorarioLoader {
 
 // Extrai o nome da coluna (por exemplo, colunaCurso) da lista de registros
 				String columnName = "coluna" + row.indexOf(column);
+				
+				// Usa o mapeamento para obter o nome do campo na aplicação
+				String campoAplicacao = CAMPO_MAP.get(column);
 
 // Adiciona a coluna ao objeto JavaScript
-				htmlContent.append(columnName).append(": '").append(column).append("',");
+				htmlContent.append(campoAplicacao).append(": '").append(column).append("',");
 
 				if (columnIterator.hasNext()) {
 					htmlContent.append("\n\t");

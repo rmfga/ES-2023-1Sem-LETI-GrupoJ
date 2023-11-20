@@ -24,6 +24,7 @@ import com.opencsv.exceptions.CsvException;
 
 
 public class HorarioLoader {
+	
 
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("A Minha Aplicação");

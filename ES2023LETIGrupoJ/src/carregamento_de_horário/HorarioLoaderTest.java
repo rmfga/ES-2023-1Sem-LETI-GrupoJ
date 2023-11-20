@@ -18,6 +18,7 @@ import static org.junit.Assert.assertTrue;
 
 public class HorarioLoaderTest {
 	
+	
 	//Strings necessarias para testes
     private String testeCsvFile = "teste-horario.csv";
     private String testeHtmlFile = "teste-HTML.html";

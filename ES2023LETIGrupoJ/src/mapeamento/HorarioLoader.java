@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.Scanner;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -22,28 +20,9 @@ import com.opencsv.CSVWriter;
 import com.opencsv.exceptions.CsvException;
 
 //Este package contem implementado os pontos 3. e 4. do projeto.
-//O objetivo é existir um mapeamento entre os campos dos ficheiros CSV e os campos correspondentes definidos no código da aplicação.
+//O objetivo é existir um mapeamento entre os campos dos ficheiros CSV e os campos de ordem definidos no ficheiro de Ordem.
 
 public class HorarioLoader {
-	
-	// Mapeamento entre os campos no arquivo CSV e os campos na aplicação
-    private static final Map<String, String> CAMPO_MAP = new HashMap<>();
-
-    static {
-        // Mapeamento inicial
-		CAMPO_MAP.put("Curso", "coluna0");
-        CAMPO_MAP.put("Unidade Curricular", "coluna1");
-        CAMPO_MAP.put("Turno", "coluna2");
-        CAMPO_MAP.put("Turma", "coluna3");
-        CAMPO_MAP.put("Inscritos no turno", "coluna4");
-        CAMPO_MAP.put("Dia da semana", "coluna5");
-        CAMPO_MAP.put("Hora início da aula", "coluna6");
-        CAMPO_MAP.put("Hora fim da aula", "coluna7");
-        CAMPO_MAP.put("Data da aula", "coluna8");
-        CAMPO_MAP.put("Características da sala pedida para a aula", "coluna9");
-        CAMPO_MAP.put("Sala atribuída à aula", "coluna10");
-        
-    }
 
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("A Minha Aplicação");
@@ -62,8 +41,12 @@ public class HorarioLoader {
 
 					// Para facilitar cada elemento do grupo pode comentar a sua diretoria aqui:
 
+					// PFS: 'horario-exemplo_OrdemColunas.csv' |
+					// /Users/pedrofs/ISCTE/ES2023LETIGrupoJ/horario-exemplo_OrdemColunas.csv
 					// PFS: 'horario-exemplo.csv' |
 					// /Users/pedrofs/ISCTE/ES2023LETIGrupoJ/horario-exemplo.csv
+					// PFS: 'horario-exemplo_Fenix+.csv' |
+					// /Users/pedrofs/ISCTE/ES2023LETIGrupoJ/horario-exemplo_Fenix+.csv
 					// PFS: 'SalasDeAulaPorTiposDeSala.html' |
 					// /Users/pedrofs/ISCTE/ES2023LETIGrupoJ/SalasDeAulaPorTiposDeSala.html
 					// PFS: 'CaracterizaçãoDasSalas.csv' |
@@ -77,26 +60,60 @@ public class HorarioLoader {
 					Scanner scanner = new Scanner(System.in);
 
 					System.out.print(
-							"Indique na consola a diretoria onde contem do arquivo CSV que pretende abrir, na sua máquina local seguido de enter: ");
-					String csvFilePath = scanner.nextLine();
+							"Indique na consola a diretoria onde contem o arquivo CSV com a ordem das colunas (horario-exemplo_OrdemColunas.csv): ");
+					String ordemColunasCsvFilePath = scanner.nextLine();
 
-					String htmlContent = loadHorarioFromCSV(csvFilePath);
-
-					// Salvar o conteúdo HTML em um arquivo
+					// Adicionando a leitura do arquivo horario-exemplo_OrdemColunas.csv
+					String[] colunaNames = readColumnNames(ordemColunasCsvFilePath);
 
 					System.out.print(
-							"Indique na consola a diretoria onde contem do arquivo 'SalasDeAulaPorTiposDeSala.html' na sua máquina local: ");
+							"Indique na consola a diretoria onde contem o arquivo CSV do horário (horario-exemplo.csv): ");
+					String horarioCsvFilePath = scanner.nextLine();
 
-					String htmlFilePath = scanner.nextLine();
-					saveHTMLToFile(htmlFilePath, htmlContent);
+					// Verificando se a ordem das colunas é a mesma
+					if (compareColumnOrder(horarioCsvFilePath, colunaNames)) {
+						// Se a ordem das colunas for igual, carregamos o horário usando a ordem
+						// predefinida no ficheiro de ORDEM
+						String htmlContent = loadHorarioFromCSV_IqualOrder(horarioCsvFilePath, colunaNames);
 
-					// Abrir o arquivo HTML em um navegador da web
-					Desktop desk = Desktop.getDesktop();
-					desk.browse(new java.net.URI("file://" + htmlFilePath));
+						// Imprimindo o mapeamento na consola
+						System.out.println("O mapeamento foi: " + Arrays.toString(colunaNames));
+
+						System.out.print(
+								"Indique na consola a diretoria onde contem do arquivo (SalasDeAulaPorTiposDeSala.html): ");
+						String htmlFilePath = scanner.nextLine();
+						saveHTMLToFile(htmlFilePath, htmlContent);
+
+						// Abrir o arquivo HTML em um navegador da web
+						Desktop desk = Desktop.getDesktop();
+						desk.browse(new java.net.URI("file://" + htmlFilePath));
+					} else {
+						// Se a ordem das colunas não for igual, carregamos o horario com uma nova
+						// ORDEM.
+						// O HTML vai abrir o novo ficheiro exportado pela plataforma Fenix +
+						// Os nomes dos campos que não estiverem definidos no ficheiro de ORDEM aparecem
+						// no terminal.
+
+						String htmlContent = loadHorarioFromCSV_DiferentOrder(horarioCsvFilePath);
+
+						// Imprimindo o mapeamento na consola
+						System.out.println("O mapeamento foi: "
+								+ Arrays.toString(getCommonColumnNames(horarioCsvFilePath, colunaNames)));
+						System.out.println("Os novos campos foram abertos no HTML, são eles: "
+								+ Arrays.toString(getDifferentColumnNames(horarioCsvFilePath, colunaNames)));
+
+						System.out.print(
+								"Indique na consola a diretoria onde contem do arquivo 'SalasDeAulaPorTiposDeSala.html' na sua máquina local: ");
+						String htmlFilePath = scanner.nextLine();
+						saveHTMLToFile(htmlFilePath, htmlContent);
+
+						// Abrir o arquivo HTML em um navegador da web
+						Desktop desk = Desktop.getDesktop();
+						desk.browse(new java.net.URI("file://" + htmlFilePath));
+					}
 				} catch (IOException | URISyntaxException e1) {
 					e1.printStackTrace();
 				} catch (CsvException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
@@ -111,74 +128,218 @@ public class HorarioLoader {
 		System.out.println("Working Directory = " + System.getProperty("user.dir"));
 	}
 
-    ////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////
 
-	public static String loadHorarioFromCSV(String csvFilePath) throws IOException, CsvException {
+	public static String[] readColumnNames(String csvFilePath) throws IOException {
+		List<String> columnNames = new ArrayList<>();
+		try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
+			String headerLine = br.readLine();
+			if (headerLine != null) {
+				String[] columns = headerLine.split(";");
+				columnNames.addAll(Arrays.asList(columns));
+			}
+		}
+		return columnNames.toArray(new String[0]);
+	}
+
+	////////////////////////////////////////////////////////////////////////////////
+
+	public static boolean compareColumnOrder(String csvFilePath, String[] expectedColumnOrder) throws IOException {
+		try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
+			String headerLine = br.readLine();
+			if (headerLine != null) {
+				String[] actualColumnOrder = headerLine.split(";");
+				return Arrays.equals(actualColumnOrder, expectedColumnOrder);
+			}
+		}
+		return false;
+	}
+
+	////////////////////////////////////////////////////////////////////////////////
+
+	// Método para obter os nomes das colunas a partir do horario-exemplo.csv
+
+	public static String[] getCommonColumnNames(String csvFilePath, String[] expectedColumnOrder) throws IOException {
+		try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
+			String headerLine = br.readLine();
+			if (headerLine != null) {
+				String[] actualColumnOrder = headerLine.split(";");
+				List<String> commonColumns = new ArrayList<>();
+				for (String columnName : actualColumnOrder) {
+					if (Arrays.asList(expectedColumnOrder).contains(columnName)) {
+						commonColumns.add(columnName);
+					}
+				}
+				return commonColumns.toArray(new String[0]);
+			}
+		}
+		return new String[0];
+	}
+
+	////////////////////////////////////////////////////////////////////////////////
+
+	// Método para obter os nomes das colunas que são diferentes
+
+	public static String[] getDifferentColumnNames(String csvFilePath, String[] expectedColumnOrder)
+			throws IOException {
+		try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
+			String headerLine = br.readLine();
+			if (headerLine != null) {
+				String[] actualColumnOrder = headerLine.split(";");
+				List<String> differentColumns = new ArrayList<>();
+				for (String columnName : actualColumnOrder) {
+					if (!Arrays.asList(expectedColumnOrder).contains(columnName)) {
+						differentColumns.add(columnName);
+					}
+				}
+				return differentColumns.toArray(new String[0]);
+			}
+		}
+		return new String[0];
+	}
+
+	////////////////////////////////////////////////////////////////////////////////
+
+	// Método para ler o ficherio 'horario-exemplo.csv' se este apresentar uma ordem
+	// igual ao ficherio 'horario-exemplo_OrdemColunas.csv'
+
+	public static String loadHorarioFromCSV_IqualOrder(String csvFilePath, String[] colunaNames)
+			throws IOException, CsvException {
+
 		List<List<String>> records = new ArrayList<>();
 		try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
 			String line;
+			// Vamos ler a primeira linha fora do loop para obter os nomes das colunas
+			String headerLine = br.readLine();
+			String[] headerColumns = headerLine.split(";");
 			while ((line = br.readLine()) != null) {
 				String[] values = line.split(";");
 				records.add(Arrays.asList(values));
 			}
-		}
 
-		StringBuilder htmlContent = new StringBuilder();
-		htmlContent.append("<html lang='en' xmlns='http://www.w3.org/1999/xhtml'>\n" + "	<head>\n"
-				+ "		<meta charset='utf-8' />\n"
-				+ "		<link href='https://unpkg.com/tabulator-tables@4.8.4/dist/css/tabulator.min.css' rel='stylesheet'>\n"
-				+ "		<script type='text/javascript' src='https://unpkg.com/tabulator-tables@4.8.4/dist/js/tabulator.min.js'></script>\n"
-				+ "	</head>\n" + "	<body>\n" + "		<H1>Tipos de Salas de Aula</H1>	\n"
-				+ "		<div id='example-table'></div>\n" + "\n" + "		<script type='text/javascript'>\n" + "\n"
-				+ "			var tabledata = [ \n");
+			StringBuilder htmlContent = new StringBuilder();
+			htmlContent.append("<html lang='en' xmlns='http://www.w3.org/1999/xhtml'>\n" + "	<head>\n"
+					+ "		<meta charset='utf-8' />\n"
+					+ "		<link href='https://unpkg.com/tabulator-tables@4.8.4/dist/css/tabulator.min.css' rel='stylesheet'>\n"
+					+ "		<script type='text/javascript' src='https://unpkg.com/tabulator-tables@4.8.4/dist/js/tabulator.min.js'></script>\n"
+					+ "	</head>\n" + "	<body>\n" + "		<H1>Tipos de Salas de Aula</H1>\n"
+					+ "		<div id='example-table'></div>\n" + "		<script type='text/javascript'>\n"
+					+ "			var tabledata = [ \n");
 
-		for (Iterator rowIterator = records.iterator(); rowIterator.hasNext();) {
-			List<String> row = (List<String>) rowIterator.next();
-			htmlContent.append("\t{");
+			for (Iterator<List<String>> rowIterator = records.iterator(); rowIterator.hasNext();) {
+				List<String> row = rowIterator.next();
+				htmlContent.append("\t{");
 
-// Adiciona cada coluna ao objeto JavaScript
-			Iterator<String> columnIterator = row.iterator();
-			while (columnIterator.hasNext()) {
-				String column = columnIterator.next();
+				Iterator<String> columnIterator = row.iterator();
+				int columnIndex = 0;
 
-// Extrai o nome da coluna (por exemplo, colunaCurso) da lista de registros
-				String columnName = "coluna" + row.indexOf(column);
-				
-				// Usa o mapeamento para obter o nome do campo na aplicação
-				String campoAplicacao = CAMPO_MAP.get(column);
+				// Ajuste: começamos a partir do segundo elemento
 
-// Adiciona a coluna ao objeto JavaScript
-				htmlContent.append(campoAplicacao).append(": '").append(column).append("',");
+				while (columnIterator.hasNext()) {
+					String column = columnIterator.next();
+					String columnName = "coluna" + columnIndex;
 
-				if (columnIterator.hasNext()) {
-					htmlContent.append("\n\t");
+					htmlContent.append(columnName).append(": '").append(column).append("',");
+
+					if (columnIterator.hasNext()) {
+						htmlContent.append("\n\t");
+					}
+
+					columnIndex++;
 				}
+
+				htmlContent.append("},\n");
+			}
+			htmlContent.append("];\n" + "			var table = new Tabulator('#example-table', {\n"
+					+ "				data:tabledata,\n" + "				layout:'fitDatafill',\n"
+					+ "				pagination:'local',\n" + "				paginationSize:10,\n"
+					+ "				paginationSizeSelector:[5, 10, 20, 40],\n" + "				movableColumns:true,\n"
+					+ "				paginationCounter:'rows',\n"
+					+ "				initialSort:[{column:'building',dir:'asc'},],\n" + "				columns:[\n");
+
+			// Ajuste: começamos a partir do segundo elemento
+			for (int columnIndex = 0; columnIndex < headerColumns.length; columnIndex++) {
+				htmlContent.append("					{title:'").append(headerColumns[columnIndex])
+						.append("', field:'coluna").append(columnIndex).append("', headerFilter:'input'},\n");
 			}
 
-			htmlContent.append("},\n");
-		}
-		htmlContent.append("];\n" + "			\n" + "			var table = new Tabulator('#example-table', {\n"
-				+ "				data:tabledata,\n" + "				layout:'fitDatafill',\n"
-				+ "				pagination:'local',\n" + "				paginationSize:10,\n"
-				+ "				paginationSizeSelector:[5, 10, 20, 40],\n" + "				movableColumns:true,\n"
-				+ "				paginationCounter:'rows',\n"
-				+ "				initialSort:[{column:'building',dir:'asc'},],\n" + "				columns:[\n"
-				+ "					{title:'Curso', field:'coluna0', headerFilter:'input'},\n"
-				+ "					{title:'Unidade Curricular', field:'coluna1', headerFilter:'input'},\n"
-				+ "					{title:'Turno', field:'coluna2', headerFilter:'input'},\n"
-				+ "					{title:'Turma', field:'coluna3', headerFilter:'input'},\n"
-				+ "					{title:'Inscritos no turno', field:'coluna4', headerFilter:'input'},\n"
-				+ "					{title:'Dia da semana', field:'coluna5', headerFilter:'input'},\n"
-				+ "					{title:'Hora início da aula', field:'coluna6', headerFilter:'input'},\n"
-				+ "					{title:'Hora fim da aula', field:'coluna7', headerFilter:'input'},\n"
-				+ "					{title:'Data da aula', field:'coluna8', headerFilter:'input'},\n"
-				+ "					{title:'Características da sala pedida para a aula', field:'coluna9', headerFilter:'input'},\n"
-				+ "					{title:'Sala atribuída à aula', field:'coluna10', headerFilter:'input'},\n"
-				+ "				],\n" + "			});\n" + "		</script>\n" + "		\n" + "	</body>\n"
-				+ "</html>");
+			htmlContent.append(
+					"				],\n" + "			});\n" + "		</script>\n" + "	</body>\n" + "</html>");
 
-		return htmlContent.toString();
+			return htmlContent.toString();
+		}
 	}
+
+	////////////////////////////////////////////////////////////////////////////////
+
+	// Método para ler o ficherio 'horario-exemplo.csv' se este apresentar uma ordem
+	// diferente ao ficherio 'horario-exemplo_OrdemColunas.csv'
+
+	public static String loadHorarioFromCSV_DiferentOrder(String csvFilePath) throws IOException, CsvException {
+		List<List<String>> records = new ArrayList<>();
+		try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
+			String line;
+			// Vamos ler a primeira linha fora do loop para obter os nomes das colunas
+			String headerLine = br.readLine();
+			String[] headerColumns = headerLine.split(";");
+			while ((line = br.readLine()) != null) {
+				String[] values = line.split(";");
+				records.add(Arrays.asList(values));
+			}
+
+			StringBuilder htmlContent = new StringBuilder();
+			htmlContent.append("<html lang='en' xmlns='http://www.w3.org/1999/xhtml'>\n" + "	<head>\n"
+					+ "		<meta charset='utf-8' />\n"
+					+ "		<link href='https://unpkg.com/tabulator-tables@4.8.4/dist/css/tabulator.min.css' rel='stylesheet'>\n"
+					+ "		<script type='text/javascript' src='https://unpkg.com/tabulator-tables@4.8.4/dist/js/tabulator.min.js'></script>\n"
+					+ "	</head>\n" + "	<body>\n" + "		<H1>Tipos de Salas de Aula</H1>\n"
+					+ "		<div id='example-table'></div>\n" + "		<script type='text/javascript'>\n"
+					+ "			var tabledata = [ \n");
+
+			for (Iterator<List<String>> rowIterator = records.iterator(); rowIterator.hasNext();) {
+				List<String> row = rowIterator.next();
+				htmlContent.append("\t{");
+
+				Iterator<String> columnIterator = row.iterator();
+				int columnIndex = 0;
+
+				while (columnIterator.hasNext()) {
+					String column = columnIterator.next();
+					String columnName = "coluna" + columnIndex;
+
+					htmlContent.append(columnName).append(": '").append(column).append("',");
+
+					if (columnIterator.hasNext()) {
+						htmlContent.append("\n\t");
+					}
+
+					columnIndex++;
+				}
+
+				htmlContent.append("},\n");
+			}
+			htmlContent.append("];\n" + "			var table = new Tabulator('#example-table', {\n"
+					+ "				data:tabledata,\n" + "				layout:'fitDatafill',\n"
+					+ "				pagination:'local',\n" + "				paginationSize:10,\n"
+					+ "				paginationSizeSelector:[5, 10, 20, 40],\n" + "				movableColumns:true,\n"
+					+ "				paginationCounter:'rows',\n"
+					+ "				initialSort:[{column:'building',dir:'asc'},],\n" + "				columns:[\n");
+
+			for (int columnIndex = 0; columnIndex < headerColumns.length; columnIndex++) {
+				htmlContent.append("					{title:'").append(headerColumns[columnIndex])
+						.append("', field:'coluna").append(columnIndex).append("', headerFilter:'input'},\n");
+			}
+
+			htmlContent.append(
+					"				],\n" + "			});\n" + "		</script>\n" + "	</body>\n" + "</html>");
+
+			return htmlContent.toString();
+		}
+	}
+
+	////////////////////////////////////////////////////////////////////////////////
+
+	// Método para gravar o HTML no ficherio 'SalasDeAulaPorTiposDeSala.html'
 
 	public static void saveHTMLToFile(String htmlFilePath, String htmlContent) throws IOException {
 		if (htmlContent == null || htmlContent.isEmpty()) {

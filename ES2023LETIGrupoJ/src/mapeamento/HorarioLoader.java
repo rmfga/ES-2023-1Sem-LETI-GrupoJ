@@ -74,7 +74,7 @@ public class HorarioLoader {
 					if (compareColumnOrder(horarioCsvFilePath, colunaNames)) {
 						// Se a ordem das colunas for igual, carregamos o horário usando a ordem
 						// predefinida no ficheiro de ORDEM
-						String htmlContent = loadHorarioFromCSV_IqualOrder(horarioCsvFilePath, colunaNames);
+						String htmlContent = loadHorarioFromCSV_EqualOrder(horarioCsvFilePath, colunaNames);
 
 						// Imprimindo o mapeamento na consola
 						System.out.println("O mapeamento foi: " + Arrays.toString(colunaNames));
@@ -203,7 +203,7 @@ public class HorarioLoader {
 	// Método para ler o ficherio 'horario-exemplo.csv' se este apresentar uma ordem
 	// igual ao ficherio 'horario-exemplo_OrdemColunas.csv'
 
-	public static String loadHorarioFromCSV_IqualOrder(String csvFilePath, String[] colunaNames)
+	public static String loadHorarioFromCSV_EqualOrder(String csvFilePath, String[] colunaNames)
 			throws IOException, CsvException {
 
 		List<List<String>> records = new ArrayList<>();

@@ -22,7 +22,7 @@ import com.opencsv.exceptions.CsvException;
 //Este package contem implementado os pontos 3. e 4. do projeto.
 //O objetivo é existir um mapeamento entre os campos dos ficheiros CSV e os campos de ordem definidos no ficheiro de Ordem.
 
-public class HorarioLoader {
+public class Mapeamento {
 
 	public static void main(String[] args) {
 		JFrame frame = new JFrame("A Minha Aplicação");
@@ -56,7 +56,8 @@ public class HorarioLoader {
 					// C:/Users/vasco/OneDrive/Documentos/FicheirosES/horario-exemplo.csv
 					// Vasco: 'SalasDeAulaPorTiposDeSala.html' |
 					// C:/Users/vasco/OneDrive/Documentos/FicheirosES/SalasDeAulaPorTiposDeSala.html
-
+					// Vasco: 'horario-exemplo_OrdemColunas.csv' |
+					// C:/Users/vasco/OneDrive/Documentos/FicheirosES/horario-exemplo_OrdemColunas.csv
 					Scanner scanner = new Scanner(System.in);
 
 					System.out.print(

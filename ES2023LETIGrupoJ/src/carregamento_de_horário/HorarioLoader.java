@@ -93,6 +93,10 @@ public class HorarioLoader {
 ////////////////////////////////////////////////////////////////////////////////
 
 	public static String loadHorarioFromCSV(String csvFilePath) throws IOException, CsvException {
+		 if (csvFilePath == null || csvFilePath.isEmpty()) {
+	            System.out.println("O caminho do arquivo CSV não pode ser nulo ou vazio.");
+	            return null;
+	        }
 		List<List<String>> records = new ArrayList<>();
 		try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
 			String line;

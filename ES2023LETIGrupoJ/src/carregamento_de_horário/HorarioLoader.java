@@ -24,73 +24,13 @@ import com.opencsv.exceptions.CsvException;
 
 public class HorarioLoader {
 
-	public static void main(String[] args) {
-		JFrame frame = new JFrame("A Minha Aplicação");
-		JButton button = new JButton("Mostrar Salas no Browser Web");
-		button.setBounds(20, 20, 250, 50);
+    ////////////////////////////////////////////////////////////////////////////////
 
-		button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
+    // Este código corre quando o botão, dentro da TAB Carregament_Horario é
+    // pressionado
+    // Abre em HTML um ficheiro CSV contendo o Horario completo do ISCTE 
 
-					// Carregar horário a partir de um arquivo CSV
-					// O codigo seguinte pede ao utilizador que indique a diretoria onde contem o
-					// ficheiro 'horario-exemplo.csv' e tambem para o ficheiro
-					// SalasDeAulaPorTiposDeSala.html'
-					// De seguida o codigo grava no ficheiro 'SalasDeAulaPorTiposDeSala.html'
-
-					// Para facilitar cada elemento do grupo pode comentar a sua diretoria aqui:
-
-					// PFS: 'horario-exemplo.csv' |
-					// /Users/pedrofs/ISCTE/ES2023LETIGrupoJ/horario-exemplo.csv
-					// PFS: 'SalasDeAulaPorTiposDeSala.html' |
-					// /Users/pedrofs/ISCTE/ES2023LETIGrupoJ/SalasDeAulaPorTiposDeSala.html
-					// PFS: 'CaracterizaçãoDasSalas.csv' |
-					// /Users/pedrofs/ISCTE/ES2023LETIGrupoJ/CaracterizaçãoDasSalas.csv
-
-					// Vasco: 'horario-exemplo.csv' |
-					// C:/Users/vasco/OneDrive/Documentos/FicheirosES/horario-exemplo.csv
-					// Vasco: 'SalasDeAulaPorTiposDeSala.html' |
-					// C:/Users/vasco/OneDrive/Documentos/FicheirosES/SalasDeAulaPorTiposDeSala.html
-
-					Scanner scanner = new Scanner(System.in);
-
-					System.out.print(
-							"Indique na consola a diretoria onde contem o arquivo CSV do horário (horario-exemplo.csv): ");
-					String csvFilePath = scanner.nextLine();
-
-					String htmlContent = loadHorarioFromCSV(csvFilePath);
-
-					// Salvar o conteúdo HTML em um arquivo
-
-					System.out.print(
-							"Indique na consola a diretoria onde contem do arquivo (SalasDeAulaPorTiposDeSala.html): ");
-
-					String htmlFilePath = scanner.nextLine();
-					saveHTMLToFile(htmlFilePath, htmlContent);
-
-					// Abrir o arquivo HTML em um navegador da web
-					Desktop desk = Desktop.getDesktop();
-					desk.browse(new java.net.URI("file://" + htmlFilePath));
-				} catch (IOException | URISyntaxException e1) {
-					e1.printStackTrace();
-				} catch (CsvException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		});
-
-		frame.add(button);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(400, 400);
-		frame.setLayout(null);
-		frame.setVisible(true);
-
-		System.out.println("Working Directory = " + System.getProperty("user.dir"));
-	}
-
-////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
 
 	public static String loadHorarioFromCSV(String csvFilePath) throws IOException, CsvException {
 		 if (csvFilePath == null || csvFilePath.isEmpty()) {
@@ -120,17 +60,17 @@ public class HorarioLoader {
 				List<String> row = (List<String>) rowIterator.next();
 				htmlContent.append("\t{");
 
-// Adiciona cada coluna ao objeto JavaScript
+				// Adiciona cada coluna ao objeto JavaScript
 				Iterator<String> columnIterator = row.iterator();
 				int columnIndex = 0;
 
 				while (columnIterator.hasNext()) {
 					String column = columnIterator.next();
 
-// Extrai o nome da coluna (por exemplo, colunaCurso) da lista de registros
+					// Extrai o nome da coluna (por exemplo, colunaCurso) da lista de registros
 					String columnName = "coluna" + columnIndex;
 
-// Adiciona a coluna ao objeto JavaScript
+					// Adiciona a coluna ao objeto JavaScript
 					htmlContent.append(columnName).append(": '").append(column).append("',");
 
 					if (columnIterator.hasNext()) {

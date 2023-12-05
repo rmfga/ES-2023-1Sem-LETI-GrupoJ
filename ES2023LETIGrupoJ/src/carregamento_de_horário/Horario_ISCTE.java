@@ -1,28 +1,39 @@
 package carregamento_de_horário;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.opencsv.exceptions.CsvException;
 
 public class Horario_ISCTE {
-	private String htmlContent;
-	private boolean horarioCarregado;
+    private List<List<String>> horario;
+    private String htmlContent;
+    private boolean horarioCarregado;
 
-	public Horario_ISCTE() {
-		this.htmlContent = "";
-		this.horarioCarregado = false;
-	}
+    public Horario_ISCTE() {
+        this.horario = new ArrayList<>();
+        this.htmlContent = "";
+        this.horarioCarregado = false;
+    }
 
-	public void carregarHorario(String csvFilePath) throws IOException, CsvException {
-		this.htmlContent = HorarioLoader.loadHorarioFromCSV(csvFilePath);
-		this.horarioCarregado = true;
-	}
+    public void carregarHorario(String csvFilePath) throws IOException, CsvException {
+        if (!horarioCarregado) {
+            
+            this.htmlContent = HorarioLoader.loadHorarioFromCSV(csvFilePath);
+            this.horarioCarregado = true;
+        }
+    }
 
-	public String getHtmlContent() {
-		return htmlContent;
-	}
+    public List<List<String>> getHorario() {
+        return horario;
+    }
 
-	public boolean isHorarioCarregado() {
-		return horarioCarregado;
-	}
+    public String getHtmlContent() {
+        return htmlContent;
+    }
+
+    public boolean isHorarioCarregado() {
+        return horarioCarregado;
+    }
 }

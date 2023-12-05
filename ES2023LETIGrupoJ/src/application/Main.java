@@ -12,6 +12,7 @@ import java.util.Map;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
@@ -147,8 +148,9 @@ public class Main {
 			public void actionPerformed(ActionEvent e) {
 
 				if (!horarioISCTE.isHorarioCarregado()) {
-					newbutton1.setToolTipText("Este botão só pode ser pressionado quando houver um horario carregado");
-					return;
+					JOptionPane.showMessageDialog(null, "Por favor, carregue o horário primeiro.", "Aviso",
+	                        JOptionPane.WARNING_MESSAGE);
+	                return;
 				}
 
 				try {
@@ -206,8 +208,9 @@ public class Main {
 			public void actionPerformed(ActionEvent e) {
 				
 				if (!horarioISCTE.isHorarioCarregado()) {
-					newbutton3.setToolTipText("Este botão só pode ser pressionado quando houver um horario carregado");
-					return;
+					JOptionPane.showMessageDialog(null, "Por favor, carregue o horário primeiro.", "Aviso",
+	                        JOptionPane.WARNING_MESSAGE);
+	                return;
 				}
 				
 				try {
@@ -253,8 +256,9 @@ public class Main {
 			public void actionPerformed(ActionEvent e) {
 				
 				if (!horarioISCTE.isHorarioCarregado()) {
-					newbutton4.setToolTipText("Este botão só pode ser pressionado quando houver um horario carregado");
-					return;
+					JOptionPane.showMessageDialog(null, "Por favor, carregue o horário primeiro.", "Aviso",
+	                        JOptionPane.WARNING_MESSAGE);
+	                return;
 				}
 				
 				try {
@@ -310,8 +314,9 @@ public class Main {
 			public void actionPerformed(ActionEvent e) {
 				
 				if (!horarioISCTE.isHorarioCarregado()) {
-					button.setToolTipText("Este botão só pode ser pressionado quando houver um horario carregado");
-					return;
+					JOptionPane.showMessageDialog(null, "Por favor, carregue o horário primeiro.", "Aviso",
+	                        JOptionPane.WARNING_MESSAGE);
+	                return;
 				}
 				
 				try {

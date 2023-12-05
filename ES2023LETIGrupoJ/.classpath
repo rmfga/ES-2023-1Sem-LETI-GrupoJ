@@ -18,7 +18,5 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/Users/pedrofs/Documents/Faculdade/3ºAno/1°Semestre/ES/Projeto/commons-csv-1.10.0/commons-csv-1.10.0.jar"/>
-	<classpathentry kind="lib" path="/Users/pedrofs/Documents/Faculdade/3ºAno/1°Semestre/ES/Projeto/commons-csv-1.10.0/opencsv-5.8.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

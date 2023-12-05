@@ -96,9 +96,10 @@ public class Main {
 										// Obter o caminho completo do arquivo
 										String htmlFilePath = fileChooser.getSelectedFile().getAbsolutePath();
 										HorarioLoader.saveHTMLToFile(htmlFilePath, htmlContent);
-
+										htmlFilePath = htmlFilePath.replace("\\", "/");
 										Desktop desk = Desktop.getDesktop();
 										desk.browse(new java.net.URI("file://" + htmlFilePath));
+										
 									}
 								}
 							} catch (IOException | URISyntaxException | CsvException ex) {

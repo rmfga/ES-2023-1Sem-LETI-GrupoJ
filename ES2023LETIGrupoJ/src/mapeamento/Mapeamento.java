@@ -1,69 +1,28 @@
 package mapeamento;
 
-import java.awt.Desktop;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Scanner;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import com.opencsv.CSVReader;
-import com.opencsv.CSVWriter;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import com.opencsv.exceptions.CsvException;
+
+import carregamento_de_horário.Horario_ISCTE;
 
 //Este package contem implementado os pontos 3. e 4. do projeto.
 //O objetivo é existir um mapeamento entre os campos dos ficheiros CSV e os campos de ordem definidos no ficheiro de Ordem.
 
 public class Mapeamento {
 	
-	public static String loadHorarioFromCSV_CustomOrder(String csvFilePath, List<String> customOrder)
+	public static String loadHorarioFromCSV_CustomOrder(Horario_ISCTE horarioISCTE, List<String> customOrder)
 			throws IOException {
-		List<List<String>> records = new ArrayList<>();
-		try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
-			String line;
-			// Vamos ler a primeira linha fora do loop para obter os nomes das colunas
-			String headerLine = br.readLine();
-			String[] headerColumns = headerLine.split(";");
-			while ((line = br.readLine()) != null) {
-				String[] values = line.split(";");
-				records.add(Arrays.asList(values));
-			}
-
+		List<List<String>> horario = horarioISCTE.getHorario();
+		
 			// Crie um mapa para mapear nomes originais para identificadores JS amigáveis
-			Map<String, String> columnNameMap = new HashMap<>();
-			for (String columnName : customOrder) {
-				int columnIndex = Arrays.asList(headerColumns).indexOf(columnName);
-
-				if (columnIndex != -1) {
-					// Substitua espaços por underscores ou remova espaços
-					String jsFriendlyColumnName = columnName.replace(" ", "_"); // ou columnName.replaceAll("\\s", "");
-
-					// Mapeie o nome original para o identificador JS amigável
-					columnNameMap.put(columnName, jsFriendlyColumnName);
-				}
-			}
+			Map<String, String> columnNameMap = horarioISCTE.generateColumnNameMap(customOrder);
 
 			StringBuilder htmlContent = new StringBuilder();
 			htmlContent.append("<html lang='en' xmlns='http://www.w3.org/1999/xhtml'>\n" + "	<head>\n"
@@ -74,13 +33,13 @@ public class Mapeamento {
 					+ "		<div id='example-table'></div>\n" + "		<script type='text/javascript'>\n"
 					+ "			var tabledata = [ \n");
 
-			for (Iterator<List<String>> rowIterator = records.iterator(); rowIterator.hasNext();) {
+			for (Iterator<List<String>> rowIterator = horario.iterator(); rowIterator.hasNext();) {
 				List<String> row = rowIterator.next();
 				htmlContent.append("\t{");
 
 				for (String columnName : customOrder) {
-					int columnIndex = Arrays.asList(headerColumns).indexOf(columnName);
-
+					int columnIndex = horarioISCTE.getColumnIndex(columnName);
+					
 					if (columnIndex != -1) {
 						String columnValue = columnIndex < row.size() ? row.get(columnIndex) : ""; // Adiciona string
 																									// vazia se não
@@ -115,7 +74,7 @@ public class Mapeamento {
 			return htmlContent.toString();
 		}
 
-	}
+	
 
 	////////////////////////////////////////////////////////////////////////////////
 

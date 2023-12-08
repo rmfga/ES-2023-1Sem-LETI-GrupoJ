@@ -1,6 +1,7 @@
 package mapeamento;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.datatransfer.DataFlavor;
@@ -12,33 +13,56 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.swing.DefaultListModel;
 import javax.swing.DropMode;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.TransferHandler;
 import javax.swing.border.EmptyBorder;
+import carregamento_de_horário.Horario_ISCTE;
 
 public class ColumnOrderDialog extends JDialog {
 	private DefaultListModel<String> listModel;
+	private DefaultListModel<String> listModel1;
 	private JList<String> columnList;
+	private JList<String> columnList1;
 	private JButton okButton;
 
-	public ColumnOrderDialog(Frame parent, String[] columnNames) {
+	private JLabel originalOrderLabel;
+	private JLabel alteredOrderLabel;
+
+	private List<String> originalOrder;
+	private List<String> originalOrder1;
+	private List<String> alteredOrder;
+
+	public ColumnOrderDialog(Frame parent, Horario_ISCTE horarioISCTE) {
 		super(parent, "Definir Ordem das Colunas", true);
 		listModel = new DefaultListModel<>();
+		listModel1 = new DefaultListModel<>();
 
-		for (String columnName : columnNames) {
+		originalOrderLabel = new JLabel("Ordem Original do Ficheiro: ");
+		alteredOrderLabel = new JLabel("Ordem Alterável pelo Utilizador: ");
+
+		originalOrder = new ArrayList<>(horarioISCTE.getHeaderColumns());
+		for (String columnName : originalOrder) {
 			listModel.addElement(columnName);
 		}
 
+		originalOrder1 = new ArrayList<>(horarioISCTE.getHeaderColumns());
+		for (String columnName : originalOrder) {
+			listModel1.addElement(columnName);
+		}
+
 		columnList = new JList<>(listModel);
+		columnList1 = new JList<>(listModel1);
 		columnList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		// Adicione suporte a arrastar e soltar
@@ -47,7 +71,7 @@ public class ColumnOrderDialog extends JDialog {
 		columnList.setTransferHandler(new ListTransferHandler());
 
 		JScrollPane scrollPane = new JScrollPane(columnList);
-		scrollPane.setPreferredSize(new Dimension(400, 400));
+		JScrollPane scrollPane1 = new JScrollPane(columnList1);
 
 		okButton = new JButton("OK");
 		okButton.addActionListener(new ActionListener() {
@@ -57,9 +81,24 @@ public class ColumnOrderDialog extends JDialog {
 			}
 		});
 
+		JPanel leftPanel = new JPanel(new BorderLayout());
+		leftPanel.add(scrollPane, BorderLayout.WEST);
+		leftPanel.setPreferredSize(new Dimension(300, 400));
+		leftPanel.add(alteredOrderLabel, BorderLayout.NORTH);
+
+		JPanel rightPanel = new JPanel(new BorderLayout());
+		rightPanel.add(scrollPane1, BorderLayout.EAST);
+		rightPanel.setPreferredSize(new Dimension(220, 400));
+		rightPanel.add(originalOrderLabel, BorderLayout.NORTH);
+
+		// JSplitPane para dividir a janela verticalmente
+		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, rightPanel);
+		splitPane.setDividerLocation(255);
+		splitPane.setDividerSize(0);
+
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-		mainPanel.add(scrollPane, BorderLayout.CENTER);
+		mainPanel.add(splitPane, BorderLayout.CENTER);
 		mainPanel.add(okButton, BorderLayout.SOUTH);
 
 		setContentPane(mainPanel);
@@ -80,11 +119,19 @@ public class ColumnOrderDialog extends JDialog {
 	}
 
 	public List<String> getCustomOrder() {
-		List<String> customOrder = new ArrayList<>();
+		alteredOrder = new ArrayList<>();
 		for (int i = 0; i < listModel.size(); i++) {
-			customOrder.add(listModel.getElementAt(i));
+			alteredOrder.add(listModel.getElementAt(i));
 		}
-		return customOrder;
+		return alteredOrder;
+	}
+
+	public List<String> getOriginalOrder() {
+		originalOrder = new ArrayList<>();
+		for (int i = 0; i < listModel.size(); i++) {
+			originalOrder.add(listModel.getElementAt(i));
+		}
+		return originalOrder;
 	}
 
 	// Handler para transferência de dados

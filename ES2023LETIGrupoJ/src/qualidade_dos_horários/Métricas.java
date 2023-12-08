@@ -16,6 +16,8 @@ import javax.swing.JOptionPane;
 
 import com.opencsv.exceptions.CsvException;
 
+import carregamento_de_horário.Horario_ISCTE;
+
 //Este package contem implementado os ponto 5. 6. e 7. do projeto.
 //O objetivo é que o utilizador escolha a métrica que pretende vizualizar na Tabela HTML
 
@@ -48,110 +50,102 @@ public class Métricas {
 		return salaMap;
 	}
 
-	public static String loadHorarioFromCSV_button1(String csvFilePath, Map<String, Integer> caracterizacaoSalasMap)
-			throws IOException, CsvException {
-		List<List<String>> records = new ArrayList<>();
+	public static String loadHorarioFromCSV_button1(Horario_ISCTE horarioISCTE,
+			Map<String, Integer> caracterizacaoSalasMap) throws IOException, CsvException {
+
+		List<List<String>> horario = horarioISCTE.getHorario();
 		final int[] count = { 0 }; // Contador de Salas Sobrelotadas
 
-		try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
-			String line;
-			String headerLine = br.readLine();
-			String[] headerColumns = headerLine.split(";");
-			while ((line = br.readLine()) != null) {
-				String[] values = line.split(";");
-				records.add(Arrays.asList(values));
+		// Filtra os registros que atendem à condição
+		List<List<String>> filteredRecords = horario.stream().filter(row -> {
+			if (row.size() >= 11) {
+				String sala = row.get(10);
+				int valorAssociado = caracterizacaoSalasMap.getOrDefault(sala, 0);
+				int inscritos = Integer.parseInt(row.get(4));
 
-			}
+				boolean conditionMet = inscritos > valorAssociado;
 
-			// Filtra os registros que atendem à condição
-			List<List<String>> filteredRecords = records.stream().filter(row -> {
-				if (row.size() >= 11) {
-					String sala = row.get(10);
-					int valorAssociado = caracterizacaoSalasMap.getOrDefault(sala, 0);
-					int inscritos = Integer.parseInt(row.get(4));
+				if (conditionMet) {
 
-					boolean conditionMet = inscritos > valorAssociado;
-
-					if (conditionMet) {
-
-						count[0]++; // Incrementa o contador sempre que uma sala sobrelotada é encontrada
-					}
-
-					return conditionMet;
-
-				} else {
-					// Lidar com os casos em que não temos salas atribuidas à aula.
-
-					return false; // Se a linha não tiver sala atribuida é ignorada.
+					count[0]++; // Incrementa o contador sempre que uma sala sobrelotada é encontrada
 				}
 
-			}).collect(Collectors.toList());
+				return conditionMet;
 
-			StringBuilder htmlContent = new StringBuilder();
-			htmlContent.append("<html lang='en' xmlns='http://www.w3.org/1999/xhtml'>\n" + "	<head>\n"
-					+ "		<meta charset='utf-8' />\n"
-					+ "		<link href='https://unpkg.com/tabulator-tables@4.8.4/dist/css/tabulator.min.css' rel='stylesheet'>\n"
-					+ "		<script type='text/javascript' src='https://unpkg.com/tabulator-tables@4.8.4/dist/js/tabulator.min.js'></script>\n"
-					+ "	</head>\n" + "	<body>\n" + "		<H1>Cálculo das Métricas</H1>	\n"
-					+ "		<div id='example-table'></div>\n" + "\n" + "		<script type='text/javascript'>\n"
-					+ "\n" + "			var tabledata = [ \n");
+			} else {
+				// Lidar com os casos em que não temos salas atribuidas à aula.
 
-			for (Iterator rowIterator = filteredRecords.iterator(); rowIterator.hasNext();) {
-				List<String> row = (List<String>) rowIterator.next();
-				htmlContent.append("\t{");
+				return false; // Se a linha não tiver sala atribuida é ignorada.
+			}
 
-				// Adiciona cada coluna ao objeto JavaScript
-				Iterator<String> columnIterator = row.iterator();
-				int columnIndex = 0;
+		}).collect(Collectors.toList());
 
-				while (columnIterator.hasNext()) {
-					String column = columnIterator.next();
+		StringBuilder htmlContent = new StringBuilder();
+		htmlContent.append("<html lang='en' xmlns='http://www.w3.org/1999/xhtml'>\n" + "	<head>\n"
+				+ "		<meta charset='utf-8' />\n"
+				+ "		<link href='https://unpkg.com/tabulator-tables@4.8.4/dist/css/tabulator.min.css' rel='stylesheet'>\n"
+				+ "		<script type='text/javascript' src='https://unpkg.com/tabulator-tables@4.8.4/dist/js/tabulator.min.js'></script>\n"
+				+ "	</head>\n" + "	<body>\n" + "		<H1>Cálculo das Métricas</H1>	\n"
+				+ "		<div id='example-table'></div>\n" + "\n" + "		<script type='text/javascript'>\n" + "\n"
+				+ "			var tabledata = [ \n");
 
-					// Extrai o nome da coluna (por exemplo, colunaCurso) da lista de registros
-					String columnName = "coluna" + columnIndex;
+		for (Iterator rowIterator = filteredRecords.iterator(); rowIterator.hasNext();) {
+			List<String> row = (List<String>) rowIterator.next();
+			htmlContent.append("\t{");
 
-					// Adiciona a coluna ao objeto JavaScript
-					htmlContent.append(columnName).append(": '").append(column).append("',");
+			// Adiciona cada coluna ao objeto JavaScript
+			Iterator<String> columnIterator = row.iterator();
+			int columnIndex = 0;
 
-					if (columnIterator.hasNext()) {
-						htmlContent.append("\n\t");
-					}
+			while (columnIterator.hasNext()) {
+				String column = columnIterator.next();
 
-					columnIndex++;
+				// Extrai o nome da coluna (por exemplo, colunaCurso) da lista de registros
+				String columnName = "coluna" + columnIndex;
+
+				// Adiciona a coluna ao objeto JavaScript
+				htmlContent.append(columnName).append(": '").append(column).append("',");
+
+				if (columnIterator.hasNext()) {
+					htmlContent.append("\n\t");
 				}
 
-				// Adiciona a nova coluna com o resultado da operação
-				int resultadoOperacao = Integer.parseInt(row.get(4))
-						- caracterizacaoSalasMap.getOrDefault(row.get(10), 0);
-				htmlContent.append("coluna").append(columnIndex).append(": '").append(resultadoOperacao).append("',");
-
-				htmlContent.append("},\n");
-			}
-			htmlContent.append("];\n" + "			var table = new Tabulator('#example-table', {\n"
-					+ "				data:tabledata,\n" + "				layout:'fitDatafill',\n"
-					+ "				pagination:'local',\n" + "				paginationSize:10,\n"
-					+ "				paginationSizeSelector:[5, 10, 20, 40],\n" + "				movableColumns:true,\n"
-					+ "				paginationCounter:'rows',\n"
-					+ "				initialSort:[{column:'building',dir:'asc'},],\n" + "				columns:[\n");
-
-			// Ajuste: começamos a partir do segundo elemento
-			for (int columnIndex = 0; columnIndex < headerColumns.length; columnIndex++) {
-				htmlContent.append("					{title:'").append(headerColumns[columnIndex])
-						.append("', field:'coluna").append(columnIndex).append("', headerFilter:'input'},\n");
+				columnIndex++;
 			}
 
-			// Adiciona a nova coluna ao final da lista de colunas
-			htmlContent.append(" {title:'Número de Estudantes em Aulas com Sobrelotação', field:'coluna")
-					.append(headerColumns.length).append("', headerFilter:'input'},\n");
+			// Adiciona a nova coluna com o resultado da operação
+			int resultadoOperacao = Integer.parseInt(row.get(4)) - caracterizacaoSalasMap.getOrDefault(row.get(10), 0);
+			htmlContent.append("coluna").append(columnIndex).append(": '").append(resultadoOperacao).append("',");
 
-			htmlContent.append(
-					"				],\n" + "			});\n" + "		</script>\n" + "	</body>\n" + "</html>");
-
-			JOptionPane.showMessageDialog(null, "Nº de aulas em sobrelotação: " + count[0], "Aviso",
-					JOptionPane.WARNING_MESSAGE);
-
-			return htmlContent.toString();
+			htmlContent.append("},\n");
 		}
+		htmlContent.append("];\n" + "			var table = new Tabulator('#example-table', {\n"
+				+ "				data:tabledata,\n" + "				layout:'fitDatafill',\n"
+				+ "				pagination:'local',\n" + "				paginationSize:10,\n"
+				+ "				paginationSizeSelector:[5, 10, 20, 40],\n" + "				movableColumns:true,\n"
+				+ "				paginationCounter:'rows',\n"
+				+ "				initialSort:[{column:'building',dir:'asc'},],\n" + "				columns:[\n");
+
+		// Ajuste: começamos a partir do segundo elemento
+		for (int columnIndex = 0; columnIndex < horarioISCTE.getHeaderColumns().size(); columnIndex++) {
+			String columnName = horarioISCTE.getHeaderColumns().get(columnIndex);
+			int columnIndexInArray = horarioISCTE.getColumnIndex(columnName);
+
+			htmlContent.append("					{title:'").append(columnName).append("', field:'coluna")
+					.append(columnIndexInArray).append("', headerFilter:'input'},\n");
+		}
+
+		// Adiciona a nova coluna ao final da lista de colunas
+		htmlContent.append(" {title:'Número de Estudantes em Aulas com Sobrelotação', field:'coluna")
+				.append(horarioISCTE.getHeaderColumns().size()).append("', headerFilter:'input'},\n");
+
+		htmlContent
+				.append("				],\n" + "			});\n" + "		</script>\n" + "	</body>\n" + "</html>");
+
+		JOptionPane.showMessageDialog(null, "Nº de aulas em sobrelotação: " + count[0], "Aviso",
+				JOptionPane.WARNING_MESSAGE);
+
+		return htmlContent.toString();
 
 	}
 
@@ -164,22 +158,12 @@ public class Métricas {
 
 	////////////////////////////////////////////////////////////////////////////////
 
-	public static String loadHorarioFromCSV_button3(String csvFilePath) throws IOException, CsvException {
-		List<List<String>> records = new ArrayList<>();
+	public static String loadHorarioFromCSV_button3(Horario_ISCTE horarioISCTE) throws IOException, CsvException {
+		List<List<String>> horario = horarioISCTE.getHorario();
 		final int[] count = { 0 }; // Contador de Salas com caracteristicas diferentes
 
-		try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
-			String line;
-			String headerLine = br.readLine();
-			String[] headerColumns = headerLine.split(";");
-			while ((line = br.readLine()) != null) {
-				String[] values = line.split(";");
-				records.add(Arrays.asList(values));
-
-			}
-
 			// Filtrar as linhas com a condição desejada
-			List<List<String>> filteredRecords = records.stream()
+			List<List<String>> filteredRecords = horario.stream()
 					.filter(row -> row.size() >= 11
 							&& (("Sala de Aulas normal".equals(row.get(9)) && row.get(10).startsWith("Auditório"))
 									|| ("Laboratório de Informática".equals(row.get(9))
@@ -230,23 +214,26 @@ public class Métricas {
 					+ "				initialSort:[{column:'building',dir:'asc'},],\n" + "				columns:[\n");
 
 			// Ajuste: começamos a partir do segundo elemento
-			for (int columnIndex = 0; columnIndex < headerColumns.length; columnIndex++) {
-				htmlContent.append("					{title:'").append(headerColumns[columnIndex])
-						.append("', field:'coluna").append(columnIndex).append("', headerFilter:'input'},\n");
+			for (int columnIndex = 0; columnIndex < horarioISCTE.getHeaderColumns().size(); columnIndex++) {
+				String columnName = horarioISCTE.getHeaderColumns().get(columnIndex);
+				int columnIndexInArray = horarioISCTE.getColumnIndex(columnName);
+
+				
+				htmlContent.append("					{title:'").append(columnName)
+						.append("', field:'coluna").append(columnIndexInArray).append("', headerFilter:'input'},\n");
 			}
 
 			htmlContent.append(
 					"				],\n" + "			});\n" + "		</script>\n" + "	</body>\n" + "</html>");
 
 			JOptionPane.showMessageDialog(null,
-					"Nº de aulas realizadas em salas que não têm as características solicitadas: "
-							+ count[0],
-					"Aviso", JOptionPane.WARNING_MESSAGE);
+					"Nº de aulas realizadas em salas que não têm as características solicitadas: " + count[0], "Aviso",
+					JOptionPane.WARNING_MESSAGE);
 
 			return htmlContent.toString();
 		}
 
-	}
+	
 
 	////////////////////////////////////////////////////////////////////////////////
 
@@ -256,23 +243,13 @@ public class Métricas {
 
 	////////////////////////////////////////////////////////////////////////////////
 
-	public static String loadHorarioFromCSV_button4(String csvFilePath) throws IOException, CsvException {
-		List<List<String>> records = new ArrayList<>();
+	public static String loadHorarioFromCSV_button4(Horario_ISCTE horarioISCTE) throws IOException, CsvException {
+		List<List<String>> horario = horarioISCTE.getHorario();
 		final int[] count = { 0 }; // Contador de Aulas sem Sala Atribuida
-
-		try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
-			String line;
-			String headerLine = br.readLine();
-			String[] headerColumns = headerLine.split(";");
-			while ((line = br.readLine()) != null) {
-				String[] values = line.split(";");
-				records.add(Arrays.asList(values));
-
-			}
 
 			// Filtrar as linhas com tamanho igual a 10, ou seja a coluna da sala atribuida
 			// está vazia
-			List<List<String>> filteredRecords = records.stream().filter(row -> row.size() == 10)
+			List<List<String>> filteredRecords = horario.stream().filter(row -> row.size() == 10)
 					.peek(row -> count[0]++) // Incrementa o contador para cada linha que passa pelo filtro
 					.collect(Collectors.toList());
 
@@ -320,8 +297,12 @@ public class Métricas {
 
 			// Ajuste: começamos a partir do segundo elemento
 			for (int columnIndex = 0; columnIndex < 10; columnIndex++) {
-				htmlContent.append("					{title:'").append(headerColumns[columnIndex])
-						.append("', field:'coluna").append(columnIndex).append("', headerFilter:'input'},\n");
+				String columnName = horarioISCTE.getHeaderColumns().get(columnIndex);
+				int columnIndexInArray = horarioISCTE.getColumnIndex(columnName);
+
+				
+				htmlContent.append("					{title:'").append(columnName)
+						.append("', field:'coluna").append(columnIndexInArray).append("', headerFilter:'input'},\n");
 			}
 
 			htmlContent.append(
@@ -332,7 +313,7 @@ public class Métricas {
 
 			return htmlContent.toString();
 		}
-	}
+	
 
 	////////////////////////////////////////////////////////////////////////////////
 

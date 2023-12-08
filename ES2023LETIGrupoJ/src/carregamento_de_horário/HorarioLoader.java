@@ -1,22 +1,14 @@
 package carregamento_de_horário;
 
-import java.awt.Desktop;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Scanner;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import com.opencsv.CSVReader;
-import com.opencsv.CSVWriter;
+
 import com.opencsv.exceptions.CsvException;
 
 //Este package contem implementado os pontos 1. e 2. do projeto.
@@ -31,13 +23,55 @@ public class HorarioLoader {
     // Abre em HTML um ficheiro CSV contendo o Horario completo do ISCTE 
 
     ////////////////////////////////////////////////////////////////////////////////
+	
+	public static List<List<String>> loadRegistrosFromCSV(String csvFilePath) throws IOException, CsvException {
+	    if (csvFilePath == null || csvFilePath.isEmpty()) {
+	        System.out.println("O caminho do arquivo CSV não pode ser nulo ou vazio.");
+	        return null;
+	    }
+
+	    List<List<String>> records = new ArrayList<>();
+
+	    try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
+	        String line;
+	        String headerLine = br.readLine();
+	        String[] headerColumns = headerLine.split(";");
+	        while ((line = br.readLine()) != null) {
+	            String[] values = line.split(";");
+	            records.add(Arrays.asList(values));
+	        }
+	    }
+
+	    return records;
+	}
+	
+	public static List<String> lerNomesColunasDoCSV(String csvFilePath) throws IOException {
+        if (csvFilePath == null || csvFilePath.isEmpty()) {
+            System.out.println("O caminho do arquivo CSV não pode ser nulo ou vazio.");
+            return null;
+        }
+
+        List<String> headerColumns = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
+            String headerLine = br.readLine();
+            if (headerLine != null) {
+                String[] columns = headerLine.split(";");
+                headerColumns.addAll(Arrays.asList(columns));
+            }
+        }
+
+        return headerColumns;
+    }
 
 	public static String loadHorarioFromCSV(String csvFilePath) throws IOException, CsvException {
 		 if (csvFilePath == null || csvFilePath.isEmpty()) {
 	            System.out.println("O caminho do arquivo CSV não pode ser nulo ou vazio.");
 	            return null;
 	        }
-		List<List<String>> records = new ArrayList<>();
+		 
+		List<List<String>> records = loadRegistrosFromCSV(csvFilePath);
+		 
 		try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
 			String line;
 			String headerLine = br.readLine();

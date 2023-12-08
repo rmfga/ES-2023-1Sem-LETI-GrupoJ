@@ -29,7 +29,7 @@ import qualidade_dos_horários.Métricas;
 
 public class Main {
 
-	private static Horario_ISCTE horarioISCTE;
+	public static Horario_ISCTE horarioISCTE;
 
 	public static void main(String[] args) {
 		horarioISCTE = new Horario_ISCTE();
@@ -150,51 +150,43 @@ public class Main {
 
 				if (!horarioISCTE.isHorarioCarregado()) {
 					JOptionPane.showMessageDialog(null, "Por favor, carregue o horário primeiro.", "Aviso",
-	                        JOptionPane.WARNING_MESSAGE);
-	                return;
+							JOptionPane.WARNING_MESSAGE);
+					return;
 				}
 
 				try {
 					JFileChooser fileChooser = new JFileChooser();
-					fileChooser.setDialogTitle("Selecione o arquivo CSV do horário");
+					fileChooser.setDialogTitle("Selecione o arquivo CSV das salas");
 					fileChooser.setFileFilter(new FileNameExtensionFilter("Arquivos CSV", "csv"));
 
 					int result = fileChooser.showOpenDialog(null);
 
 					if (result == JFileChooser.APPROVE_OPTION) {
-						String horarioFilePath = fileChooser.getSelectedFile().getAbsolutePath();
+						String caracterizacaoSalasFilePath = fileChooser.getSelectedFile().getAbsolutePath();
 
-						fileChooser.setDialogTitle("Selecione o arquivo CSV das salas");
-						result = fileChooser.showOpenDialog(null);
+						// Processa o arquivo CaracterizaçãoDasSalas.csv e cria o mapa associativo
+						Map<String, Integer> caracterizacaoSalasMap = Métricas
+								.processarCaracterizacaoDasSalas(caracterizacaoSalasFilePath);
+
+						// Conteúdo HTML
+						String htmlContent = Métricas.loadHorarioFromCSV_button1(horarioISCTE, caracterizacaoSalasMap);
+
+						// Nome do arquivo HTML
+						String htmlFileName = "SalasDeAulaPorTiposDeSala.html";
+
+						// Configurar o local para salvar o arquivo HTML
+						fileChooser.setDialogTitle("Selecione o local para salvar o arquivo HTML");
+						fileChooser.setFileFilter(new FileNameExtensionFilter("Arquivos HTML", "html"));
+						fileChooser.setSelectedFile(new File(htmlFileName));
+
+						result = fileChooser.showSaveDialog(null);
 
 						if (result == JFileChooser.APPROVE_OPTION) {
-							String caracterizacaoSalasFilePath = fileChooser.getSelectedFile().getAbsolutePath();
+							String htmlFilePath = fileChooser.getSelectedFile().getAbsolutePath();
+							Métricas.saveHTMLToFile(htmlFilePath, htmlContent);
 
-							// Processa o arquivo CaracterizaçãoDasSalas.csv e cria o mapa associativo
-							Map<String, Integer> caracterizacaoSalasMap = Métricas
-									.processarCaracterizacaoDasSalas(caracterizacaoSalasFilePath);
-
-							// Conteúdo HTML
-							String htmlContent = Métricas.loadHorarioFromCSV_button1(horarioFilePath,
-									caracterizacaoSalasMap);
-
-							// Nome do arquivo HTML
-							String htmlFileName = "SalasDeAulaPorTiposDeSala.html";
-
-							// Configurar o local para salvar o arquivo HTML
-							fileChooser.setDialogTitle("Selecione o local para salvar o arquivo HTML");
-							fileChooser.setFileFilter(new FileNameExtensionFilter("Arquivos HTML", "html"));
-							fileChooser.setSelectedFile(new File(htmlFileName));
-
-							result = fileChooser.showSaveDialog(null);
-
-							if (result == JFileChooser.APPROVE_OPTION) {
-								String htmlFilePath = fileChooser.getSelectedFile().getAbsolutePath();
-								Métricas.saveHTMLToFile(htmlFilePath, htmlContent);
-
-								Desktop desk = Desktop.getDesktop();
-								desk.browse(new java.net.URI("file://" + htmlFilePath));
-							}
+							Desktop desk = Desktop.getDesktop();
+							desk.browse(new java.net.URI("file://" + htmlFilePath));
 						}
 					}
 				} catch (IOException | URISyntaxException | CsvException ex) {
@@ -206,44 +198,38 @@ public class Main {
 		tab2Panel.add(newbutton1);
 
 		newbutton3.addActionListener(new ActionListener() {
+
 			public void actionPerformed(ActionEvent e) {
-				
+
 				if (!horarioISCTE.isHorarioCarregado()) {
 					JOptionPane.showMessageDialog(null, "Por favor, carregue o horário primeiro.", "Aviso",
-	                        JOptionPane.WARNING_MESSAGE);
-	                return;
+							JOptionPane.WARNING_MESSAGE);
+					return;
 				}
-				
+
 				try {
 					JFileChooser fileChooser = new JFileChooser();
-					fileChooser.setDialogTitle("Selecione o arquivo CSV do horário");
-					fileChooser.setFileFilter(new FileNameExtensionFilter("Arquivos CSV", "csv"));
 
-					int result = fileChooser.showOpenDialog(null);
+					// Configurar o local para salvar o arquivo HTML
+					fileChooser.setDialogTitle("Selecione o local para salvar o arquivo HTML");
+					fileChooser.setFileFilter(new FileNameExtensionFilter("Arquivos HTML", "html"));
+					fileChooser.setSelectedFile(new File("SalasDeAulaPorTiposDeSala.html"));
+
+					int result = fileChooser.showSaveDialog(null);
 
 					if (result == JFileChooser.APPROVE_OPTION) {
-						String csvFilePath = fileChooser.getSelectedFile().getAbsolutePath();
+						// Obter o caminho completo do arquivo HTML
+						String htmlFilePath = fileChooser.getSelectedFile().getAbsolutePath();
 
-						// Conteúdo HTML
-						String htmlContent = Métricas.loadHorarioFromCSV_button3(csvFilePath);
+						// Carregar o conteúdo HTML
+						String htmlContent = Métricas.loadHorarioFromCSV_button3(horarioISCTE);
 
-						// Nome do arquivo HTML
-						String htmlFileName = "SalasDeAulaPorTiposDeSala.html";
+						// Salvar o conteúdo HTML no arquivo
+						Métricas.saveHTMLToFile(htmlFilePath, htmlContent);
 
-						// Configurar o local para salvar o arquivo HTML
-						fileChooser.setDialogTitle("Selecione o local para salvar o arquivo HTML");
-						fileChooser.setFileFilter(new FileNameExtensionFilter("Arquivos HTML", "html"));
-						fileChooser.setSelectedFile(new File(htmlFileName));
-
-						result = fileChooser.showSaveDialog(null);
-
-						if (result == JFileChooser.APPROVE_OPTION) {
-							String htmlFilePath = fileChooser.getSelectedFile().getAbsolutePath();
-							Métricas.saveHTMLToFile(htmlFilePath, htmlContent);
-
-							Desktop desk = Desktop.getDesktop();
-							desk.browse(new java.net.URI("file://" + htmlFilePath));
-						}
+						// Abrir o arquivo HTML no navegador padrão
+						Desktop desk = Desktop.getDesktop();
+						desk.browse(new java.net.URI("file://" + htmlFilePath));
 					}
 				} catch (IOException | URISyntaxException | CsvException ex) {
 					ex.printStackTrace();
@@ -255,45 +241,37 @@ public class Main {
 
 		newbutton4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				if (!horarioISCTE.isHorarioCarregado()) {
 					JOptionPane.showMessageDialog(null, "Por favor, carregue o horário primeiro.", "Aviso",
-	                        JOptionPane.WARNING_MESSAGE);
-	                return;
+							JOptionPane.WARNING_MESSAGE);
+					return;
 				}
-				
+
 				try {
 					JFileChooser fileChooser = new JFileChooser();
-					fileChooser.setDialogTitle("Selecione o arquivo CSV do horário");
-					fileChooser.setFileFilter(new FileNameExtensionFilter("Arquivos CSV", "csv"));
 
-					int result = fileChooser.showOpenDialog(null);
+					// Configurar o local para salvar o arquivo HTML
+					fileChooser.setDialogTitle("Selecione o local para salvar o arquivo HTML");
+					fileChooser.setFileFilter(new FileNameExtensionFilter("Arquivos HTML", "html"));
+					fileChooser.setSelectedFile(new File("SalasDeAulaPorTiposDeSala.html"));
+
+					int result = fileChooser.showSaveDialog(null);
 
 					if (result == JFileChooser.APPROVE_OPTION) {
-						String csvFilePath = fileChooser.getSelectedFile().getAbsolutePath();
+						// Obter o caminho completo do arquivo HTML
+						String htmlFilePath = fileChooser.getSelectedFile().getAbsolutePath();
 
-						// Conteúdo HTML
-						String htmlContent = Métricas.loadHorarioFromCSV_button4(csvFilePath);
+						// Carregar o conteúdo HTML
+						String htmlContent = Métricas.loadHorarioFromCSV_button4(horarioISCTE);
 
-						// Nome do arquivo HTML
-						String htmlFileName = "SalasDeAulaPorTiposDeSala.html";
+						// Salvar o conteúdo HTML no arquivo
+						Métricas.saveHTMLToFile(htmlFilePath, htmlContent);
 
-						// Configurar o local para salvar o arquivo HTML
-						fileChooser.setDialogTitle("Selecione o local para salvar o arquivo HTML");
-						fileChooser.setFileFilter(new FileNameExtensionFilter("Arquivos HTML", "html"));
-						fileChooser.setSelectedFile(new File(htmlFileName));
-
-						result = fileChooser.showSaveDialog(null);
-
-						if (result == JFileChooser.APPROVE_OPTION) {
-							String htmlFilePath = fileChooser.getSelectedFile().getAbsolutePath();
-							Métricas.saveHTMLToFile(htmlFilePath, htmlContent);
-
-							Desktop desk = Desktop.getDesktop();
-							desk.browse(new java.net.URI("file://" + htmlFilePath));
-						}
+						// Abrir o arquivo HTML no navegador padrão
+						Desktop desk = Desktop.getDesktop();
+						desk.browse(new java.net.URI("file://" + htmlFilePath));
 					}
-
 				} catch (IOException | URISyntaxException | CsvException ex) {
 					ex.printStackTrace();
 				}
@@ -313,54 +291,49 @@ public class Main {
 
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				if (!horarioISCTE.isHorarioCarregado()) {
 					JOptionPane.showMessageDialog(null, "Por favor, carregue o horário primeiro.", "Aviso",
-	                        JOptionPane.WARNING_MESSAGE);
-	                return;
+							JOptionPane.WARNING_MESSAGE);
+					return;
 				}
-				
+
 				try {
-					JFileChooser fileChooser = new JFileChooser();
-					fileChooser.setDialogTitle("Selecione o arquivo CSV do horário");
-					fileChooser.setFileFilter(new FileNameExtensionFilter("Arquivos CSV", "csv"));
+					// Exibir janela para o usuário definir a ordem das colunas
+					String[] columnNames = horarioISCTE.getColumnNames();
+					ColumnOrderDialog dialog = new ColumnOrderDialog(null, horarioISCTE);
 
-					int result = fileChooser.showOpenDialog(null);
+					dialog.setVisible(true);
 
-					if (result == JFileChooser.APPROVE_OPTION) {
-						String csvFilePath = fileChooser.getSelectedFile().getAbsolutePath();
-
-						// Exibir janela para o usuário definir a ordem das colunas
-						String[] columnNames = Mapeamento.readColumnNames(csvFilePath);
-						ColumnOrderDialog dialog = new ColumnOrderDialog(null, columnNames);
-						dialog.setVisible(true);
-
-						List<String> customOrder = dialog.getCustomOrder();
-						if (customOrder.isEmpty()) {
-							System.out.println("Operação de seleção de ordem personalizada cancelada.");
-							return;
-						}
-
-						// Nome do arquivo HTML
-						String htmlFileName = "SalasDeAulaPorTiposDeSala.html";
-
-						// Configurar o local para salvar o arquivo HTML
-						fileChooser.setDialogTitle("Selecione o local para salvar o arquivo HTML");
-						fileChooser.setFileFilter(new FileNameExtensionFilter("Arquivos HTML", "html"));
-						fileChooser.setSelectedFile(new File(htmlFileName));
-
-						result = fileChooser.showSaveDialog(null);
-
-						if (result == JFileChooser.APPROVE_OPTION) {
-							String htmlFilePath = fileChooser.getSelectedFile().getAbsolutePath();
-							String htmlContent = Mapeamento.loadHorarioFromCSV_CustomOrder(csvFilePath, customOrder);
-							Mapeamento.saveHTMLToFile(htmlFilePath, htmlContent);
-
-							Desktop desk = Desktop.getDesktop();
-							desk.browse(new java.net.URI("file://" + htmlFilePath));
-						}
+					List<String> customOrder = dialog.getCustomOrder();
+					if (customOrder.isEmpty()) {
+						System.out.println("Operação de seleção de ordem personalizada cancelada.");
+						return;
 					}
 
+					JFileChooser fileChooser = new JFileChooser();
+
+					// Configurar o local para salvar o arquivo HTML
+					fileChooser.setDialogTitle("Selecione o local para salvar o arquivo HTML");
+					fileChooser.setFileFilter(new FileNameExtensionFilter("Arquivos HTML", "html"));
+					fileChooser.setSelectedFile(new File("SalasDeAulaPorTiposDeSala.html"));
+
+					int result = fileChooser.showSaveDialog(null);
+
+					if (result == JFileChooser.APPROVE_OPTION) {
+						// Obter o caminho completo do arquivo HTML
+						String htmlFilePath = fileChooser.getSelectedFile().getAbsolutePath();
+
+						// Carregar o conteúdo HTML
+						String htmlContent = Mapeamento.loadHorarioFromCSV_CustomOrder(horarioISCTE, customOrder);
+
+						// Salvar o conteúdo HTML no arquivo
+						Métricas.saveHTMLToFile(htmlFilePath, htmlContent);
+
+						// Abrir o arquivo HTML no navegador padrão
+						Desktop desk = Desktop.getDesktop();
+						desk.browse(new java.net.URI("file://" + htmlFilePath));
+					}
 				} catch (IOException | URISyntaxException ex) {
 					ex.printStackTrace();
 				}

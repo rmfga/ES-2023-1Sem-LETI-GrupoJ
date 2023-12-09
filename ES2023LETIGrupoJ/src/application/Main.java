@@ -300,7 +300,7 @@ public class Main {
 
 				try {
 					// Exibir janela para o usuário definir a ordem das colunas
-					String[] columnNames = horarioISCTE.getColumnNames();
+					
 					ColumnOrderDialog dialog = new ColumnOrderDialog(null, horarioISCTE);
 
 					dialog.setVisible(true);
@@ -331,7 +331,7 @@ public class Main {
 						Métricas.saveHTMLToFile(htmlFilePath, htmlContent);
 
 						// Abrir o arquivo HTML no navegador padrão
-						Desktop desk = Desktop.getDesktop();
+					 	Desktop desk = Desktop.getDesktop();
 						desk.browse(new java.net.URI("file://" + htmlFilePath));
 					}
 				} catch (IOException | URISyntaxException ex) {

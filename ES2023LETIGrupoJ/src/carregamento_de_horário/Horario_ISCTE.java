@@ -59,13 +59,7 @@ public class Horario_ISCTE {
         return headerColumns;
     }
 	
-	public String[] getColumnNames() {
-        if (horario != null && !horario.isEmpty()) {
-            List<String> columnNamesList = horario.get(0); // A primeira linha contém os nomes das colunas
-            return columnNamesList.toArray(new String[0]);
-        }
-        return new String[0]; // Ou null, dependendo do que deseja fazer se o horário estiver vazio
-    }
+
 
 	public int getColumnIndex(String columnName) {
 		List<String> headerColumns = getHeaderColumns();

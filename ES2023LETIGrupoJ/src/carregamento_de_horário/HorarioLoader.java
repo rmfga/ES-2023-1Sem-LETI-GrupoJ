@@ -24,6 +24,7 @@ public class HorarioLoader {
 
     ////////////////////////////////////////////////////////////////////////////////
 	
+	//Esta função lê apenas o registro do horário, excluindo o cabeçalho (nome das colunas)
 	public static List<List<String>> loadRegistrosFromCSV(String csvFilePath) throws IOException, CsvException {
 	    if (csvFilePath == null || csvFilePath.isEmpty()) {
 	        System.out.println("O caminho do arquivo CSV não pode ser nulo ou vazio.");
@@ -34,8 +35,12 @@ public class HorarioLoader {
 
 	    try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
 	        String line;
-	        String headerLine = br.readLine();
-	        String[] headerColumns = headerLine.split(";");
+	        
+	        //br.readLine() de modo a ignorar a linha do cabeçalho, já que 
+	        //esta função lê apenas os dados (registros)
+	        //do horário sem o nome das colunas
+	        br.readLine();
+
 	        while ((line = br.readLine()) != null) {
 	            String[] values = line.split(";");
 	            records.add(Arrays.asList(values));
@@ -45,6 +50,7 @@ public class HorarioLoader {
 	    return records;
 	}
 	
+	//Ao contrário da função anterior, esta função lê apenas a linha do cabeçalho(nome das colunas)
 	public static List<String> lerNomesColunasDoCSV(String csvFilePath) throws IOException {
         if (csvFilePath == null || csvFilePath.isEmpty()) {
             System.out.println("O caminho do arquivo CSV não pode ser nulo ou vazio.");

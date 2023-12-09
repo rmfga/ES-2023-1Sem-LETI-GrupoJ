@@ -31,25 +31,6 @@ public class Métricas {
 
 	////////////////////////////////////////////////////////////////////////////////
 
-	public static Map<String, Integer> processarCaracterizacaoDasSalas(String csvFilePath) throws IOException {
-		Map<String, Integer> salaMap = new HashMap<>();
-
-		try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
-			br.readLine();
-			String line;
-			while ((line = br.readLine()) != null) {
-				String[] values = line.split(";");
-				if (values.length >= 3) {
-					String sala = values[1].trim();
-					int valorAssociado = Integer.parseInt(values[2].trim());
-					salaMap.put(sala, valorAssociado);
-				}
-			}
-		}
-
-		return salaMap;
-	}
-
 	public static String loadHorarioFromCSV_button1(Horario_ISCTE horarioISCTE,
 			Map<String, Integer> caracterizacaoSalasMap) throws IOException, CsvException {
 

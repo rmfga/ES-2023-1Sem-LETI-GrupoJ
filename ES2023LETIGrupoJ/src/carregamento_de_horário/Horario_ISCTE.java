@@ -46,20 +46,10 @@ public class Horario_ISCTE {
 	public void adicionarRegistrosAoHorario(List<List<String>> registros) {
 		horario.addAll(registros);
 	}
-
-//	public List<String> getHeaderColumns() {
-//		if (horario != null && !horario.isEmpty()) {
-//			return horario.get(0); // A primeira linha contém os nomes das colunas
-//		}
-//		return Collections.emptyList(); // Ou null, ou uma lista vazia, dependendo do que deseja fazer se o horário
-//										// estiver vazio
-//	}
 	
 	public List<String> getHeaderColumns() {
         return headerColumns;
     }
-	
-
 
 	public int getColumnIndex(String columnName) {
 		List<String> headerColumns = getHeaderColumns();

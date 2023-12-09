@@ -77,15 +77,8 @@ public class HorarioLoader {
 	        }
 		 
 		List<List<String>> records = loadRegistrosFromCSV(csvFilePath);
-		 
-		try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
-			String line;
-			String headerLine = br.readLine();
-			String[] headerColumns = headerLine.split(";");
-			while ((line = br.readLine()) != null) {
-				String[] values = line.split(";");
-				records.add(Arrays.asList(values));
-			}
+		
+		String[] headerColumns = (lerNomesColunasDoCSV(csvFilePath)).toArray(new String[0]);
 
 			StringBuilder htmlContent = new StringBuilder();
 			htmlContent.append("<html lang='en' xmlns='http://www.w3.org/1999/xhtml'>\n" + "	<head>\n"
@@ -96,7 +89,7 @@ public class HorarioLoader {
 					+ "		<div id='example-table'></div>\n" + "\n" + "		<script type='text/javascript'>\n"
 					+ "\n" + "			var tabledata = [ \n");
 
-			for (Iterator rowIterator = records.iterator(); rowIterator.hasNext();) {
+			for (Iterator<List<String>> rowIterator = records.iterator(); rowIterator.hasNext();) {
 				List<String> row = (List<String>) rowIterator.next();
 				htmlContent.append("\t{");
 
@@ -140,7 +133,7 @@ public class HorarioLoader {
 
 			return htmlContent.toString();
 		}
-	}
+	
 
 	public static void saveHTMLToFile(String htmlFilePath, String htmlContent) throws IOException {
 		if (htmlContent == null || htmlContent.isEmpty()) {

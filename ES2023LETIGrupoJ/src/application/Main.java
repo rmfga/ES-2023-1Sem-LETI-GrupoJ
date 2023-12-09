@@ -182,9 +182,10 @@ public class Main {
 						result = fileChooser.showSaveDialog(null);
 
 						if (result == JFileChooser.APPROVE_OPTION) {
+							
 							String htmlFilePath = fileChooser.getSelectedFile().getAbsolutePath();
 							Métricas.saveHTMLToFile(htmlFilePath, htmlContent);
-
+							htmlFilePath = htmlFilePath.replace("\\", "/");
 							Desktop desk = Desktop.getDesktop();
 							desk.browse(new java.net.URI("file://" + htmlFilePath));
 						}
@@ -226,7 +227,7 @@ public class Main {
 
 						// Salvar o conteúdo HTML no arquivo
 						Métricas.saveHTMLToFile(htmlFilePath, htmlContent);
-
+						htmlFilePath = htmlFilePath.replace("\\", "/");
 						// Abrir o arquivo HTML no navegador padrão
 						Desktop desk = Desktop.getDesktop();
 						desk.browse(new java.net.URI("file://" + htmlFilePath));
@@ -267,7 +268,7 @@ public class Main {
 
 						// Salvar o conteúdo HTML no arquivo
 						Métricas.saveHTMLToFile(htmlFilePath, htmlContent);
-
+						htmlFilePath = htmlFilePath.replace("\\", "/");
 						// Abrir o arquivo HTML no navegador padrão
 						Desktop desk = Desktop.getDesktop();
 						desk.browse(new java.net.URI("file://" + htmlFilePath));
@@ -300,7 +301,7 @@ public class Main {
 
 				try {
 					// Exibir janela para o usuário definir a ordem das colunas
-					
+
 					ColumnOrderDialog dialog = new ColumnOrderDialog(null, horarioISCTE);
 
 					dialog.setVisible(true);
@@ -329,7 +330,7 @@ public class Main {
 
 						// Salvar o conteúdo HTML no arquivo
 						Métricas.saveHTMLToFile(htmlFilePath, htmlContent);
-
+						htmlFilePath = htmlFilePath.replace("\\", "/");
 						// Abrir o arquivo HTML no navegador padrão
 					 	Desktop desk = Desktop.getDesktop();
 						desk.browse(new java.net.URI("file://" + htmlFilePath));

@@ -58,6 +58,8 @@ public class GUI extends JFrame {
 	private static JPanel createTab1Content() {
 		JPanel tab1Panel = new JPanel();
 		JButton button = new JButton("Carregar Horário");
+		button.setToolTipText(
+				"Carregar horário a partir de um ficheiro CSV e visualizá-lo no browser web, sob a forma de tabela");
 		button.setBounds(20, 20, 250, 250);
 
 		button.addActionListener(new ActionListener() {
@@ -67,7 +69,7 @@ public class GUI extends JFrame {
 					if (horarioISCTE.isHorarioCarregado() && salasISCTE.isSalasCarregada()) {
 
 						int userChoice = JOptionPane.showConfirmDialog(null,
-								"Os ficheiros do horário e das salas já foram carregados. Se pretende alterar o ficheiro a visualizar, clique em Sim. Se pretende sair, clique em Não.",
+								"Se pretende alterar o ficheiro a visualizar, clique em 'Yes'. Se pretende sair, clique em 'No'.",
 								"Aviso", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
 
 						if (userChoice == JOptionPane.NO_OPTION) {
@@ -98,10 +100,6 @@ public class GUI extends JFrame {
 								if (!horarioISCTE.isHorarioCarregado() || !salasISCTE.isSalasCarregada()) {
 									JFileChooser fileChooser = new JFileChooser();
 
-									if (diretorioEscolhido != null) {
-										fileChooser.setCurrentDirectory(new File(diretorioEscolhido));
-									}
-
 									fileChooser.setDialogTitle("Selecione o ficheiro CSV do horário");
 									fileChooser.setFileFilter(new FileNameExtensionFilter("Arquivos CSV", "csv"));
 
@@ -110,26 +108,28 @@ public class GUI extends JFrame {
 									if (result == JFileChooser.APPROVE_OPTION) {
 										String horarioCsvFilePath = fileChooser.getSelectedFile().getAbsolutePath();
 
-										if (diretorioEscolhido == null) {
-											diretorioEscolhido = fileChooser.getSelectedFile().getParent();
-										}
+										diretorioEscolhido = fileChooser.getSelectedFile().getParent();
 
 										horarioISCTE.carregarHorario(horarioCsvFilePath);
 
 										JFileChooser salasFileChooser = new JFileChooser();
 										salasFileChooser.setDialogTitle("Selecione o ficheiro CSV das salas");
+
+										// Configura o diretório inicial
+										if (getDiretorioEscolhido() != null) {
+											salasFileChooser.setCurrentDirectory(new File(getDiretorioEscolhido()));
+										}
+
 										salasFileChooser
 												.setFileFilter(new FileNameExtensionFilter("Arquivos CSV", "csv"));
 
 										result = salasFileChooser.showOpenDialog(null);
 
+										// Restante do seu código...
+
 										if (result == JFileChooser.APPROVE_OPTION) {
 											String salasCsvFilePath = salasFileChooser.getSelectedFile()
 													.getAbsolutePath();
-
-											if (diretorioEscolhido == null) {
-												diretorioEscolhido = salasFileChooser.getSelectedFile().getParent();
-											}
 
 											salasISCTE.carregarListaSalas(salasCsvFilePath);
 

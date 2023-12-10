@@ -60,10 +60,6 @@ public class Horario_ISCTE {
 		this.horarioCsvFilePath = horarioCsvFilePath;
 	}
 
-    public void setHorarioCarregado(boolean horarioCarregado) {
-		this.horarioCarregado = horarioCarregado;
-	}
-
 	/**
      * Obtém os registos do horário.
      *
@@ -137,7 +133,11 @@ public class Horario_ISCTE {
         return columnOrder;
     }
 
-    /**
+    public void setHorarioCarregado(boolean horarioCarregado) {
+		this.horarioCarregado = horarioCarregado;
+	}
+
+	/**
      * Gera um mapa de nomes de colunas amigáveis para JavaScript.
      *
      * @param columnNames Lista de strings que representa os nomes das colunas.

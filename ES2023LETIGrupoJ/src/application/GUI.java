@@ -223,6 +223,7 @@ public class GUI extends JFrame {
 												"Aviso", JOptionPane.WARNING_MESSAGE);
 										return null;
 									}
+
 									horarioISCTE.setHorarioCarregado(false);
 									// Se os caminhos não forem iguais, continua o restante do método
 									horarioISCTE.carregarHorario(csvFilePath);
@@ -380,6 +381,14 @@ public class GUI extends JFrame {
 					List<String> customOrder = dialog.getCustomOrder();
 					if (customOrder.isEmpty()) {
 						System.out.println("Operação de seleção de ordem personalizada cancelada.");
+						return;
+					}
+
+					List<String> originalOrder = horarioISCTE.getColumnOrder();
+
+					if (!customOrder.equals(originalOrder)) {
+						JOptionPane.showMessageDialog(null, "O mapeamento dos campos foi mal executado", "Aviso",
+								JOptionPane.WARNING_MESSAGE);
 						return;
 					}
 

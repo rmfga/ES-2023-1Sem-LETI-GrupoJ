@@ -151,13 +151,4 @@ public class ListaSalasLoader {
 		return htmlContent.toString();
 	}
 
-//	public static void saveHTMLToFile(String htmlFilePath, String htmlContent) throws IOException {
-//		if (htmlContent == null || htmlContent.isEmpty()) {
-//			System.out.println("O conteúdo do ficheiro HTML não pode ser nulo ou vazio.");
-//			return;
-//		}
-//		try (FileWriter writer = new FileWriter(htmlFilePath)) {
-//			writer.write(htmlContent);
-//		}
-//	}
 }

@@ -1,7 +1,5 @@
 package tests;
 
-import carregamento_de_horário.Horario_ISCTE;
-
 import static org.junit.Assert.*;
 import org.junit.After;
 import org.junit.Before;
@@ -11,30 +9,50 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import com.opencsv.exceptions.CsvException;
+
+import carregamento_de_horário.Horario_ISCTE;
+
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 
+/**
+ * Esta classe contém testes JUnit para a classe {@link Horario_ISCTE}.
+ * Os testes visam garantir o correto funcionamento dos métodos relacionados ao carregamento e manipulação do horário.
+ */
 public class Horario_ISCTETest {
-	
+
     private static final String CSV_FILE = "teste-horario.csv";
     private static final String HTML_FILE = "teste-HTML.html";
     private Horario_ISCTE horarioISCTE;
 
+    /**
+     * Configuração inicial para os testes.
+     * Cria um arquivo CSV de teste e instancia a classe {@link Horario_ISCTE}.
+     *
+     * @throws IOException Se ocorrer um erro ao criar o arquivo CSV.
+     */
     @Before
     public void setUp() throws IOException {
         createCSVFile(CSV_FILE);
         horarioISCTE = new Horario_ISCTE();
     }
 
+    /**
+     * Limpeza após os testes.
+     * Exclui o arquivo CSV de teste e um possível arquivo HTML gerado.
+     */
     @After
     public void tearDown() {
         deleteFile(CSV_FILE);
         deleteFile(HTML_FILE);
     }
-    
 
+    /**
+     * Testa o construtor da classe {@link Horario_ISCTE}.
+     * Verifica se os objetos são instanciados corretamente.
+     */
     @Test
     public void testConstrutor() {
         assertNotNull(horarioISCTE);
@@ -42,9 +60,14 @@ public class Horario_ISCTETest {
         assertEquals("", horarioISCTE.getHtmlContent());
         assertFalse(horarioISCTE.isHorarioCarregado());
     }
-    
-    
 
+    /**
+     * Testa o método {@link Horario_ISCTE#carregarHorario(String)}.
+     * Verifica se o horário é carregado corretamente a partir de um arquivo CSV.
+     *
+     * @throws IOException     Se ocorrer um erro de leitura do arquivo CSV.
+     * @throws CsvException    Se ocorrer um erro durante o parsing do arquivo CSV.
+     */
     @Test
     public void testCarregarHorario() throws IOException, CsvException {
         horarioISCTE.carregarHorario(CSV_FILE);
@@ -52,40 +75,56 @@ public class Horario_ISCTETest {
         assertNotNull(horarioISCTE.getHtmlContent());
     }
 
+    /**
+     * Testa o método {@link Horario_ISCTE#getHorario()}.
+     * Verifica se o horário não é nulo.
+     */
     @Test
     public void testGetHorario() {
         assertNotNull(horarioISCTE.getHorario());
-  
     }
 
+    /**
+     * Testa o método {@link Horario_ISCTE#getHtmlContent()}.
+     * Verifica se o conteúdo HTML é uma string vazia inicialmente.
+     */
     @Test
     public void testGetHtmlContent() {
         assertEquals("", horarioISCTE.getHtmlContent());
     }
 
-    @Test
-    public void testIsHorarioCarregado() {
-        assertFalse(horarioISCTE.isHorarioCarregado());
-    }
-    
+    /**
+     * Testa o método {@link Horario_ISCTE#adicionarRegistrosAoHorario(List)}.
+     * Verifica se novos registros são adicionados corretamente ao horário.
+     *
+     * @throws IOException     Se ocorrer um erro de leitura do arquivo CSV.
+     * @throws CsvException    Se ocorrer um erro durante o parsing do arquivo CSV.
+     */
     @Test
     public void testAdicionarRegistrosAoHorario() throws IOException, CsvException {
-    	horarioISCTE.carregarHorario(CSV_FILE);
-    	
+        horarioISCTE.carregarHorario(CSV_FILE);
+
         List<List<String>> novosRegistros = new ArrayList<>();
         novosRegistros.add(Arrays.asList("Computação", "150", "Dra. Almeida"));
 
         horarioISCTE.adicionarRegistrosAoHorario(novosRegistros);
-        
+
         // Verifica se o tamanho do horário aumentou
-        assertEquals(2, horarioISCTE.getHorario().size()); 
-        
+        assertEquals(2, horarioISCTE.getHorario().size());
+
         // Verifica se os novos registros foram adicionados corretamente
-        assertEquals("Computação", horarioISCTE.getHorario().get(1).get(0)); 
+        assertEquals("Computação", horarioISCTE.getHorario().get(1).get(0));
         assertEquals("150", horarioISCTE.getHorario().get(1).get(1));
         assertEquals("Dra. Almeida", horarioISCTE.getHorario().get(1).get(2));
     }
-    
+
+    /**
+     * Testa o método {@link Horario_ISCTE#getHeaderColumns()}.
+     * Verifica se as colunas do cabeçalho são obtidas corretamente.
+     *
+     * @throws IOException     Se ocorrer um erro de leitura do arquivo CSV.
+     * @throws CsvException    Se ocorrer um erro durante o parsing do arquivo CSV.
+     */
     @Test
     public void testGetHeaderColumns() throws IOException, CsvException {
         horarioISCTE.carregarHorario(CSV_FILE);
@@ -97,17 +136,30 @@ public class Horario_ISCTETest {
         assertEquals("Professor", headerColumns.get(2));
     }
 
-
+    /**
+     * Testa o método {@link Horario_ISCTE#getColumnIndex(String)}.
+     * Verifica se os índices das colunas são obtidos corretamente.
+     *
+     * @throws IOException     Se ocorrer um erro de leitura do arquivo CSV.
+     * @throws CsvException    Se ocorrer um erro durante o parsing do arquivo CSV.
+     */
     @Test
     public void testGetColumnIndex() throws IOException, CsvException {
         horarioISCTE.carregarHorario(CSV_FILE);
         assertEquals(0, horarioISCTE.getColumnIndex("Nome do Curso"));
         assertEquals(1, horarioISCTE.getColumnIndex("Número de Alunos"));
         assertEquals(2, horarioISCTE.getColumnIndex("Professor"));
-        //Testa quando não existe uma certa coluna, retorna -1
+        // Testa quando não existe uma certa coluna, retorna -1
         assertEquals(-1, horarioISCTE.getColumnIndex("Disciplina"));
     }
 
+    /**
+     * Testa o método {@link Horario_ISCTE#generateColumnNameMap(List)}.
+     * Verifica se o mapeamento de nomes de colunas é gerado corretamente.
+     *
+     * @throws IOException     Se ocorrer um erro de leitura do arquivo CSV.
+     * @throws CsvException    Se ocorrer um erro durante o parsing do arquivo CSV.
+     */
     @Test
     public void testGenerateColumnNameMap() throws IOException, CsvException {
         horarioISCTE.carregarHorario(CSV_FILE);
@@ -123,6 +175,12 @@ public class Horario_ISCTETest {
         assertEquals("Professor", columnNameMap.get("Professor"));
     }
 
+    /**
+     * Cria um arquivo CSV de teste.
+     *
+     * @param filePath O caminho do arquivo CSV a ser criado.
+     * @throws IOException Se ocorrer um erro ao criar o arquivo CSV.
+     */
     private void createCSVFile(String filePath) throws IOException {
         try (FileWriter writer = new FileWriter(filePath)) {
             // Adiciona um cabeçalho ao arquivo CSV
@@ -132,6 +190,11 @@ public class Horario_ISCTETest {
         }
     }
 
+    /**
+     * Exclui um arquivo.
+     *
+     * @param filePath O caminho do arquivo a ser excluído.
+     */
     private void deleteFile(String filePath) {
         File file = new File(filePath);
         if (file.exists()) {

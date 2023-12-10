@@ -14,6 +14,10 @@ import application.GUI;
 public class SaveFiles {
 
 	public static void salvarArquivoHTML(String htmlContent) {
+		if (htmlContent == null || htmlContent.isEmpty()) {
+			System.out.println("O conteúdo do ficheiro HTML não pode ser nulo ou vazio.");
+			return;
+		}
 		try {
 			JFileChooser fileChooser = new JFileChooser();
 			

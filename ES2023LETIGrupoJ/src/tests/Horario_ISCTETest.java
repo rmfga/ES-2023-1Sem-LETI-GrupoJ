@@ -93,6 +93,9 @@ public class Horario_ISCTETest {
         assertEquals("", horarioISCTE.getHorarioCsvFilePath());
     }
     
+    /**
+     * Testa o método {@link Horario_ISCTE#setHorarioCsvFilePath()}.
+     */
     @Test
     public void testSetHorarioCsvFilePath() {
         Horario_ISCTE horario = new Horario_ISCTE();
@@ -105,6 +108,9 @@ public class Horario_ISCTETest {
         assertEquals(caminhoArquivo, horario.getHorarioCsvFilePath());
     }
 
+    /**
+     * Testa o método {@link Horario_ISCTE#setHorarioCarregado()}.
+     */
     @Test
     public void testSetHorarioCarregado() {
         Horario_ISCTE horario = new Horario_ISCTE();

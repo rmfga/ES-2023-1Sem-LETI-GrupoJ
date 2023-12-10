@@ -45,9 +45,9 @@ public class GUI extends JFrame {
 
 	public void createAndShowGUI() {
 		JTabbedPane tabbedPane = new JTabbedPane();
-		tabbedPane.addTab("CARREGAMENTO_HORÁRIO", createTab1Content());
+		tabbedPane.addTab("CARREGAMENTO_HORARIO", createTab1Content());
 		tabbedPane.addTab("MAPEAMENTO", createTab3Content());
-		tabbedPane.addTab("GESTÃO_DAS_MÉTRICAS", createTab2Content());
+		tabbedPane.addTab("GESTAO_DAS_METRICAS", createTab2Content());
 		
 
 		add(tabbedPane);

@@ -23,7 +23,7 @@ import carregamento_de_horário.ListaSalas_ISCTE;
 import carregamento_de_horário.SaveFiles;
 import mapeamento.ColumnOrderDialog;
 import mapeamento.Mapeamento;
-import qualidade_dos_horários.Métricas;
+import qualidade_dos_horarios.Metricas;
 
 public class GUI extends JFrame {
 
@@ -210,7 +210,7 @@ public class GUI extends JFrame {
 				try {
 					Map<String, Integer> caracterizacaoSalasMap = salasISCTE.getSalaMap();
 
-					String htmlContent = Métricas.loadHorarioFromCSV_button1(horarioISCTE, caracterizacaoSalasMap);
+					String htmlContent = Metricas.loadHorarioFromCSV_button1(horarioISCTE, caracterizacaoSalasMap);
 
 					SaveFiles.salvarArquivoHTML(htmlContent);
 
@@ -234,7 +234,7 @@ public class GUI extends JFrame {
 
 				try {
 
-					String htmlContent = Métricas.loadHorarioFromCSV_button3(horarioISCTE);
+					String htmlContent = Metricas.loadHorarioFromCSV_button3(horarioISCTE);
 
 					SaveFiles.salvarArquivoHTML(htmlContent);
 
@@ -257,7 +257,7 @@ public class GUI extends JFrame {
 
 				try {
 
-					String htmlContent = Métricas.loadHorarioFromCSV_button4(horarioISCTE);
+					String htmlContent = Metricas.loadHorarioFromCSV_button4(horarioISCTE);
 
 					SaveFiles.salvarArquivoHTML(htmlContent);
 

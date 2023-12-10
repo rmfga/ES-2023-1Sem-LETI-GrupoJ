@@ -1,4 +1,4 @@
-package qualidade_dos_horários;
+package qualidade_dos_horarios;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -21,7 +21,7 @@ import carregamento_de_horário.Horario_ISCTE;
 //Este package contem implementado os ponto 5. 6. e 7. do projeto.
 //O objetivo é que o utilizador escolha a métrica que pretende vizualizar na Tabela HTML
 
-public class Métricas {
+public class Metricas {
 
 	////////////////////////////////////////////////////////////////////////////////
 

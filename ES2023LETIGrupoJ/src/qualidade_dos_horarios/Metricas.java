@@ -1,8 +1,5 @@
 package qualidade_dos_horarios;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,23 +15,24 @@ import com.opencsv.exceptions.CsvException;
 
 import carregamento_de_horario.Horario_ISCTE;
 
-//Este package contem implementado os ponto 5. 6. e 7. do projeto.
-//O objetivo é que o utilizador escolha a métrica que pretende vizualizar na Tabela HTML
-
+/**
+ * Esta classe implementa os pontos 5, 6 e 7 do projeto.
+ * O objetivo é que o utilizador escolha a métrica que pretende visualizar na Tabela HTML.
+ */
 public class Metricas {
 
-	////////////////////////////////////////////////////////////////////////////////
-
-	// Este código corre quando o 1º botão, dentro da TAB Gestão_Das_Métricas é
-	// pressionado
-	// Abre no HTML apenas as aulas que estão sobrelotadas
-
-	////////////////////////////////////////////////////////////////////////////////
-
-	public static String loadHorarioFromCSV_button1(Horario_ISCTE horarioISCTE,
-			Map<String, Integer> caracterizacaoSalasMap) throws IOException, CsvException {
-
-		List<List<String>> horario = horarioISCTE.getHorario();
+    /**
+     * Este método carrega o horário a partir de um arquivo CSV e exibe no HTML apenas as aulas que estão sobrelotadas.
+     *
+     * @param horarioISCTE  O horário do ISCTE.
+     * @param caracterizacaoSalasMap Um mapa que caracteriza as salas.
+     * @return Uma string que contem o conteúdo HTML da tabela.
+     * @throws IOException   Se ocorrer um erro de leitura do arquivo.
+     * @throws CsvException Se ocorrer um erro no processamento do CSV.
+     */
+    public static String loadHorarioFromCSV_button1(Horario_ISCTE horarioISCTE,
+                                                     Map<String, Integer> caracterizacaoSalasMap) throws IOException, CsvException {
+List<List<String>> horario = horarioISCTE.getHorario();
 		final int[] count = { 0 }; // Contador de Salas Sobrelotadas
 
 		// Filtra os registros que atendem à condição
@@ -137,10 +135,18 @@ public class Metricas {
 	// Abre no HTML apenas as aulas em que as caracteristicas pedidas foram
 	// diferentes das que foram dadas para a aula
 
-	////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////    }
 
-	public static String loadHorarioFromCSV_button3(Horario_ISCTE horarioISCTE) throws IOException, CsvException {
-		List<List<String>> horario = horarioISCTE.getHorario();
+    /**
+     * Este método carrega o horário a partir de um arquivo CSV e exibe no HTML apenas as aulas que têm características diferentes das especificadas.
+     *
+     * @param horarioISCTE O horário do ISCTE.
+     * @return Uma string contendo o conteúdo HTML da tabela.
+     * @throws IOException   Se ocorrer um erro de leitura do arquivo.
+     * @throws CsvException  Se ocorrer um erro no processamento do CSV.
+     */
+    public static String loadHorarioFromCSV_button3(Horario_ISCTE horarioISCTE) throws IOException, CsvException {
+        List<List<String>> horario = horarioISCTE.getHorario();
 		final int[] count = { 0 }; // Contador de Salas com caracteristicas diferentes
 
 		// Filtrar as linhas com a condição desejada
@@ -218,23 +224,24 @@ public class Metricas {
 	// Abre no HTML apenas as aulas que não têm sala atribuída
 
 	////////////////////////////////////////////////////////////////////////////////
+    
 
-	public static String loadHorarioFromCSV_button4(Horario_ISCTE horarioISCTE) throws IOException, CsvException {
-		List<List<String>> horario = horarioISCTE.getHorario();
+    /**
+     * Este método carrega o horário a partir de um arquivo CSV e exibe no HTML apenas as aulas que não têm sala atribuída.
+     *
+     * @param horarioISCTE O horário do ISCTE.
+     * @return Uma string contendo o conteúdo HTML da tabela.
+     * @throws IOException   Se ocorrer um erro de leitura do arquivo.
+     * @throws CsvException  Se ocorrer um erro no processamento do CSV.
+     */
+    public static String loadHorarioFromCSV_button4(Horario_ISCTE horarioISCTE) throws IOException, CsvException {
+        List<List<String>> horario = horarioISCTE.getHorario();
 		final int[] count = { 0 }; // Contador de Aulas sem Sala Atribuida
 
 		// Filtrar as linhas com tamanho igual a 10, ou seja a coluna da sala atribuida
 		// está vazia
-		List<List<String>> filteredRecords = horario.stream().filter(row -> row.size() == 10).peek(row -> count[0]++) // Incrementa
-																														// o
-																														// contador
-																														// para
-																														// cada
-																														// linha
-																														// que
-																														// passa
-																														// pelo
-																														// filtro
+		// Incrementa o contador para cada linha que passa pelo filtro
+		List<List<String>> filteredRecords = horario.stream().filter(row -> row.size() == 10).peek(row -> count[0]++) 
 				.collect(Collectors.toList());
 
 		StringBuilder htmlContent = new StringBuilder();
@@ -294,7 +301,6 @@ public class Metricas {
 		JOptionPane.showMessageDialog(null, "Número de aulas sem sala atribuída: " + count[0], "Aviso",
 				JOptionPane.WARNING_MESSAGE);
 
-		return htmlContent.toString();
-	}
-
+		return htmlContent.toString(); 
+   }
 }

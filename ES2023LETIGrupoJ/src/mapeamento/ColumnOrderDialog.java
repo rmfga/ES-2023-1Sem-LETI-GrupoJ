@@ -31,176 +31,173 @@ import javax.swing.border.EmptyBorder;
 
 import carregamento_de_horario.Horario_ISCTE;
 
+/**
+ * JDialog para definir a ordem das colunas.
+ */
 public class ColumnOrderDialog extends JDialog {
-	private DefaultListModel<String> listModel;
-	private DefaultListModel<String> listModel1;
-	private JList<String> columnList;
-	private JList<String> columnList1;
-	private JButton okButton;
+    private DefaultListModel<String> listModel;
+    private DefaultListModel<String> listModel1;
+    private JList<String> columnList;
+    private JList<String> columnList1;
+    private JButton okButton;
 
-	private JLabel originalOrderLabel;
-	private JLabel alteredOrderLabel;
+    private JLabel originalOrderLabel;
+    private JLabel alteredOrderLabel;
 
-	private List<String> originalOrder;
-	private List<String> originalOrder1;
-	private List<String> alteredOrder;
+    private List<String> originalOrder;
+    private List<String> originalOrder1;
+    private List<String> alteredOrder;
 
-	public ColumnOrderDialog(Frame parent, Horario_ISCTE horarioISCTE) {
-		super(parent, "Definir Ordem das Colunas", true);
-		listModel = new DefaultListModel<>();
-		listModel1 = new DefaultListModel<>();
+    /**
+     * Construtor para a classe ColumnOrderDialog.
+     *
+     * @param parent O frame pai.
+     * @param horarioISCTE Instância da classe Horario_ISCTE.
+     */
+    public ColumnOrderDialog(Frame parent, Horario_ISCTE horarioISCTE) {
+        super(parent, "Definir Ordem das Colunas", true);
+        listModel = new DefaultListModel<>();
+        listModel1 = new DefaultListModel<>();
 
-		originalOrderLabel = new JLabel("Ordem Original do Ficheiro: ");
-		alteredOrderLabel = new JLabel("Ordem Alterável pelo Utilizador: ");
+        originalOrderLabel = new JLabel("Ordem Original do Ficheiro: ");
+        alteredOrderLabel = new JLabel("Ordem Alterável pelo Utilizador: ");
 
-		originalOrder = new ArrayList<>(horarioISCTE.getHeaderColumns());
-		for (String columnName : originalOrder) {
-			listModel.addElement(columnName);
-		}
+        originalOrder = new ArrayList<>(horarioISCTE.getHeaderColumns());
+        for (String columnName : originalOrder) {
+            listModel.addElement(columnName);
+        }
 
-		originalOrder1 = horarioISCTE.getColumnOrder();
-		for (String columnName : originalOrder1) {
-			listModel1.addElement(columnName);
-		}
+        originalOrder1 = horarioISCTE.getColumnOrder();
+        for (String columnName : originalOrder1) {
+            listModel1.addElement(columnName);
+        }
 
-		columnList = new JList<>(listModel);
-		columnList1 = new JList<>(listModel1);
-		columnList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        columnList = new JList<>(listModel);
+        columnList1 = new JList<>(listModel1);
+        columnList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-		// Adicione suporte a arrastar e soltar
-		columnList.setDragEnabled(true);
-		columnList.setDropMode(DropMode.INSERT);
-		columnList.setTransferHandler(new ListTransferHandler());
+        // Adicione suporte a arrastar e soltar
+        columnList.setDragEnabled(true);
+        columnList.setDropMode(DropMode.INSERT);
+        columnList.setTransferHandler(new ListTransferHandler());
 
-		JScrollPane scrollPane = new JScrollPane(columnList);
-		JScrollPane scrollPane1 = new JScrollPane(columnList1);
+        JScrollPane scrollPane = new JScrollPane(columnList);
+        JScrollPane scrollPane1 = new JScrollPane(columnList1);
 
-		okButton = new JButton("OK");
-		okButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-			}
-		});
+        okButton = new JButton("OK");
+        okButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+        });
 
-		JPanel leftPanel = new JPanel(new BorderLayout());
-		leftPanel.add(scrollPane, BorderLayout.WEST);
-		leftPanel.setPreferredSize(new Dimension(300, 400));
-		leftPanel.add(alteredOrderLabel, BorderLayout.NORTH);
+        JPanel leftPanel = new JPanel(new BorderLayout());
+        leftPanel.add(scrollPane, BorderLayout.WEST);
+        leftPanel.setPreferredSize(new Dimension(300, 400));
+        leftPanel.add(alteredOrderLabel, BorderLayout.NORTH);
 
-		JPanel rightPanel = new JPanel(new BorderLayout());
-		rightPanel.add(scrollPane1, BorderLayout.EAST);
-		rightPanel.setPreferredSize(new Dimension(220, 400));
-		rightPanel.add(originalOrderLabel, BorderLayout.NORTH);
+        JPanel rightPanel = new JPanel(new BorderLayout());
+        rightPanel.add(scrollPane1, BorderLayout.EAST);
+        rightPanel.setPreferredSize(new Dimension(220, 400));
+        rightPanel.add(originalOrderLabel, BorderLayout.NORTH);
 
-		// JSplitPane para dividir a janela verticalmente
-		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, rightPanel);
-		splitPane.setDividerLocation(255);
-		splitPane.setDividerSize(0);
+        // JSplitPane para dividir a janela verticalmente
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, rightPanel);
+        splitPane.setDividerLocation(255);
+        splitPane.setDividerSize(0);
 
-		JPanel mainPanel = new JPanel(new BorderLayout());
-		mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-		mainPanel.add(splitPane, BorderLayout.CENTER);
-		mainPanel.add(okButton, BorderLayout.SOUTH);
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        mainPanel.add(splitPane, BorderLayout.CENTER);
+        mainPanel.add(okButton, BorderLayout.SOUTH);
 
-		setContentPane(mainPanel);
-		pack();
-		setLocationRelativeTo(parent);
+        setContentPane(mainPanel);
+        pack();
+        setLocationRelativeTo(parent);
 
-		// Adicione um ouvinte de mouse para selecionar itens com um clique
-		columnList.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (e.getClickCount() == 1) {
-					JList list = (JList) e.getSource();
-					int index = list.locationToIndex(e.getPoint());
-					list.setSelectedIndex(index);
-				}
-			}
-		});
+        // Adicione um ouvinte de mouse para selecionar itens com um clique
+        columnList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 1) {
+                    JList list = (JList) e.getSource();
+                    int index = list.locationToIndex(e.getPoint());
+                    list.setSelectedIndex(index);
+                }
+            }
+        });
+    }
 
-//		// Adicione um ouvinte de teclado para excluir a coluna quando a tecla "Delete"
-//		// é pressionada
-//		columnList.addKeyListener(new KeyAdapter() {
-//			@Override
-//			public void keyPressed(KeyEvent e) {
-//				if (e.getKeyCode() == KeyEvent.VK_DELETE) {
-//					int selectedIndex = columnList.getSelectedIndex();
-//					if (selectedIndex != -1) {
-//						// Remove a coluna da lista e atualiza a exibição
-//						listModel.remove(selectedIndex);
-//						updateAlteredOrderLabel();
-//					}
-//				}
-//			}
-//		});
-	}
-//
-//	// Método para atualizar o rótulo de ordem alterada
-//	private void updateAlteredOrderLabel() {
-//		listModel.clear();
-//		for (int i = 0; i < listModel.getSize(); i++) {
-//			listModel.addElement(listModel.getElementAt(i));
-//		}
-//	}
-	
-	public List<String> getCustomOrder() {
-		alteredOrder = new ArrayList<>();
-		for (int i = 0; i < listModel.size(); i++) {
-			alteredOrder.add(listModel.getElementAt(i));
-		}
-		return alteredOrder;
-	}
+    /**
+     * Obtém a ordem personalizada das colunas.
+     *
+     * @return Lista contendo a ordem personalizada das colunas.
+     */
+    public List<String> getCustomOrder() {
+        alteredOrder = new ArrayList<>();
+        for (int i = 0; i < listModel.size(); i++) {
+            alteredOrder.add(listModel.getElementAt(i));
+        }
+        return alteredOrder;
+    }
 
-	public List<String> getOriginalOrder() {
-		originalOrder = new ArrayList<>();
-		for (int i = 0; i < listModel1.size(); i++) {
-			originalOrder.add(listModel1.getElementAt(i));
-		}
-		return originalOrder;
-	}
+    /**
+     * Obtém a ordem original das colunas.
+     *
+     * @return Lista contendo a ordem original das colunas.
+     */
+    public List<String> getOriginalOrder() {
+        originalOrder = new ArrayList<>();
+        for (int i = 0; i < listModel1.size(); i++) {
+            originalOrder.add(listModel1.getElementAt(i));
+        }
+        return originalOrder;
+    }
 
-	// Handler para transferência de dados
-	private class ListTransferHandler extends TransferHandler {
-		@Override
-		public int getSourceActions(JComponent c) {
-			return TransferHandler.MOVE;
-		}
+    /**
+     * Manipulador para a transferência de dados entre as listas.
+     */
+    private class ListTransferHandler extends TransferHandler {
+        @Override
+        public int getSourceActions(JComponent c) {
+            return TransferHandler.MOVE;
+        }
 
-		@Override
-		protected Transferable createTransferable(JComponent c) {
-			JList<String> list = (JList<String>) c;
-			int index = list.getSelectedIndex();
-			String value = list.getSelectedValue();
-			return new StringSelection(value);
-		}
+        @Override
+        protected Transferable createTransferable(JComponent c) {
+            JList<String> list = (JList<String>) c;
+            int index = list.getSelectedIndex();
+            String value= list.getSelectedValue();
+            return new StringSelection(value);
+        }
 
-		@Override
-		protected void exportDone(JComponent source, Transferable data, int action) {
-			if (action == TransferHandler.MOVE) {
-				JList<String> list = (JList<String>) source;
-				int index = list.getSelectedIndex();
-				listModel.remove(index);
-			}
-		}
+        @Override
+        protected void exportDone(JComponent source, Transferable data, int action) {
+            if (action == TransferHandler.MOVE) {
+                JList<String> list = (JList<String>) source;
+                int index = list.getSelectedIndex();
+                listModel.remove(index);
+            }
+        }
 
-		@Override
-		public boolean canImport(TransferHandler.TransferSupport support) {
-			return support.isDataFlavorSupported(DataFlavor.stringFlavor);
-		}
+        @Override
+        public boolean canImport(TransferHandler.TransferSupport support) {
+            return support.isDataFlavorSupported(DataFlavor.stringFlavor);
+        }
 
-		@Override
-		public boolean importData(TransferHandler.TransferSupport support) {
-			try {
-				String value = (String) support.getTransferable().getTransferData(DataFlavor.stringFlavor);
-				JList.DropLocation dl = (JList.DropLocation) support.getDropLocation();
-				int index = dl.getIndex();
-				listModel.add(index, value);
-				return true;
-			} catch (Exception e) {
-				e.printStackTrace();
-				return false;
-			}
-		}
-	}
+        @Override
+        public boolean importData(TransferHandler.TransferSupport support) {
+            try {
+                String value = (String) support.getTransferable().getTransferData(DataFlavor.stringFlavor);
+                JList.DropLocation dl = (JList.DropLocation) support.getDropLocation();
+                int index = dl.getIndex();
+                listModel.add(index, value);
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+    }
 }

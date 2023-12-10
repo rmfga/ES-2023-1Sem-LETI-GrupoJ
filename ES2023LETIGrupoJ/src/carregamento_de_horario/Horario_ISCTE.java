@@ -11,109 +11,158 @@ import java.util.Set;
 
 import com.opencsv.exceptions.CsvException;
 
+/**
+ * A classe Horario_ISCTE representa um horário do ISCTE, que oferece funcionalidades relacionadas ao carregamento e manipulação dos dados.
+ */
 public class Horario_ISCTE {
-	private List<List<String>> horario;
-	private String htmlContent;
-	private boolean horarioCarregado;
-	private List<String> headerColumns;
-	private List<String> columnOrder;
+    private List<List<String>> horario;        // Representa os registros do horário
+    private String htmlContent;                // Conteúdo HTML do horário
+    private boolean horarioCarregado;          // Indica se o horário foi carregado
+    private List<String> headerColumns;        // Nomes das colunas do horário
+    private List<String> columnOrder;          // Ordem das colunas no horário
 
-	public Horario_ISCTE() {
-		this.horario = new ArrayList<>();
-		this.htmlContent = "";
-		this.horarioCarregado = false;
-		this.headerColumns = new ArrayList<>();
-		this.columnOrder = columnOrderDefault();
-	}
-
-	public void carregarHorario(String csvFilePath) throws IOException, CsvException {
-		if (!horarioCarregado) {
-			this.horario = HorarioLoader.loadRegistrosFromCSV(csvFilePath);
-			this.htmlContent = HorarioLoader.loadHorarioFromCSV(csvFilePath);
-			this.horarioCarregado = true;
-			this.headerColumns = HorarioLoader.lerNomesColunasDoCSV(csvFilePath);
-		}
-	}
-
-	public List<List<String>> getHorario() {
-		return horario;
-	}
-
-	public String getHtmlContent() {
-		return htmlContent;
-	}
-
-	public boolean isHorarioCarregado() {
-		return horarioCarregado;
-	}
-
-	public void adicionarRegistrosAoHorario(List<List<String>> registros) {
-		horario.addAll(registros);
-	}
-
-	public List<String> getHeaderColumns() {
-		return headerColumns;
-	}
-
-	public int getColumnIndex(String columnName) {
-		List<String> headerColumns = getHeaderColumns();
-
-		for (int i = 0; i < headerColumns.size(); i++) {
-			if (columnName.equals(headerColumns.get(i))) {
-				return i;
-			}
-		}
-
-		return -1; // Retorna -1 se a coluna não for encontrada
-	}
-
-	public List<String> getColumnOrder() {
-		System.out.println(columnOrder);
-		return columnOrder;
-	}
-	
-	public static List<String> compareAndRetainOrder(List<String> headerColumns, List<String> columnOrder) {
-        
-
-        return null;
+    /**
+     * Construtor da classe Horario_ISCTE.
+     * Inicializa as variáveis da classe.
+     */
+    public Horario_ISCTE() {
+        this.horario = new ArrayList<>();
+        this.htmlContent = "";
+        this.horarioCarregado = false;
+        this.headerColumns = new ArrayList<>();
+        this.columnOrder = columnOrderDefault();
     }
 
+    /**
+     * Carrega o horário a partir de um arquivo CSV.
+     *
+     * @param csvFilePath Caminho do arquivo CSV.
+     * @throws IOException Se ocorrer um erro de E/S durante a leitura do arquivo.
+     * @throws CsvException Se ocorrer um erro durante o processamento do CSV.
+     */
+    public void carregarHorario(String csvFilePath) throws IOException, CsvException {
+        if (!horarioCarregado) {
+            this.horario = HorarioLoader.loadRegistrosFromCSV(csvFilePath);
+            this.htmlContent = HorarioLoader.loadHorarioFromCSV(csvFilePath);
+            this.horarioCarregado = true;
+            this.headerColumns = HorarioLoader.lerNomesColunasDoCSV(csvFilePath);
+        }
+    }
 
-	public Map<String, String> generateColumnNameMap(List<String> columnNames) {
-		Map<String, String> columnNameMap = new HashMap<>();
+    /**
+     * Obtém os registos do horário.
+     *
+     * @return Lista de listas de strings representando os registos do horário.
+     */
+    public List<List<String>> getHorario() {
+        return horario;
+    }
 
-		for (String columnName : columnNames) {
-			int columnIndex = this.getColumnIndex(columnName);
+    /**
+     * Obtém o conteúdo HTML do horário.
+     *
+     * @return Conteúdo HTML que representa o horário.
+     */
+    public String getHtmlContent() {
+        return htmlContent;
+    }
 
-			if (columnIndex != -1) {
-				// Substitua espaços por underscores ou remova espaços
-				String jsFriendlyColumnName = columnName.replace(" ", "_"); // ou columnName.replaceAll("\\s", "");
+    /**
+     * Verifica se o horário foi carregado.
+     *
+     * @return true se o horário foi carregado, false caso contrário.
+     */
+    public boolean isHorarioCarregado() {
+        return horarioCarregado;
+    }
 
-				// Mapeie o nome original para o identificador JS amigável
-				columnNameMap.put(columnName, jsFriendlyColumnName);
-			}
-		}
+    /**
+     * Adiciona registos ao horário.
+     *
+     * @param registos Lista de listas de strings que representa os registos a serem adicionados.
+     */
+    public void adicionarRegistrosAoHorario(List<List<String>> registros) {
+        horario.addAll(registros);
+    }
 
-		return columnNameMap;
-	}
+    /**
+     * Obtém os nomes das colunas do horário.
+     *
+     * @return Lista de strings que representa os nomes das colunas.
+     */
+    public List<String> getHeaderColumns() {
+        return headerColumns;
+    }
 
-	private List<String> columnOrderDefault() {
-		List<String> columnOrder = new ArrayList<>();
+    /**
+     * Obtém o índice de uma coluna pelo seu nome.
+     *
+     * @param columnName Nome da coluna.
+     * @return Índice da coluna ou -1 se a coluna não for encontrada.
+     */
+    public int getColumnIndex(String columnName) {
+        List<String> headerColumns = getHeaderColumns();
 
-		// Adiciona os nomes das colunas à lista
-		columnOrder.add("Curso");
-		columnOrder.add("Unidade Curricular");
-		columnOrder.add("Turno");
-		columnOrder.add("Turma");
-		columnOrder.add("Inscritos no turno");
-		columnOrder.add("Dia da semana");
-		columnOrder.add("Hora início da aula");
-		columnOrder.add("Hora fim da aula");
-		columnOrder.add("Data da aula");
-		columnOrder.add("Características da sala pedida para a aula");
-		columnOrder.add("Sala atribuída à aula");
+        for (int i = 0; i < headerColumns.size(); i++) {
+            if (columnName.equals(headerColumns.get(i))) {
+                return i;
+            }
+        }
 
-		return columnOrder;
-	}
+        return -1; // Retorna -1 se a coluna não for encontrada
+    }
 
+    /**
+     * Obtém a ordem das colunas no horário.
+     *
+     * @return Lista de strings que representa a ordem das colunas.
+     */
+    public List<String> getColumnOrder() {
+        System.out.println(columnOrder);
+        return columnOrder;
+    }
+
+    /**
+     * Gera um mapa de nomes de colunas amigáveis para JavaScript.
+     *
+     * @param columnNames Lista de strings que representa os nomes das colunas.
+     * @return Mapa de nomes de colunas originais para identificadores JS amigáveis.
+     */
+    public Map<String, String> generateColumnNameMap(List<String> columnNames) {
+        Map<String, String> columnNameMap = new HashMap<>();
+
+        for (String columnName : columnNames) {
+            int columnIndex = this.getColumnIndex(columnName);
+
+            if (columnIndex != -1) {
+                // Substitua espaços por underscores ou remova espaços
+                String jsFriendlyColumnName = columnName.replace(" ", "_"); // ou columnName.replaceAll("\\s", "");
+
+                // Mapeie o nome original para o identificador JS amigável
+                columnNameMap.put(columnName, jsFriendlyColumnName);
+            }
+        }
+
+        return columnNameMap;
+    }
+
+    // Método privado para obter a ordem padrão das colunas
+    private List<String> columnOrderDefault() {
+        List<String> columnOrder = new ArrayList<>();
+
+        // Adiciona os nomes das colunas à lista
+        columnOrder.add("Curso");
+        columnOrder.add("Unidade Curricular");
+        columnOrder.add("Turno");
+        columnOrder.add("Turma");
+        columnOrder.add("Inscritos no turno");
+        columnOrder.add("Dia da semana");
+        columnOrder.add("Hora início da aula");
+        columnOrder.add("Hora fim da aula");
+        columnOrder.add("Data da aula");
+        columnOrder.add("Características da sala pedida para a aula");
+        columnOrder.add("Sala atribuída à aula");
+
+        return columnOrder;
+    }
 }

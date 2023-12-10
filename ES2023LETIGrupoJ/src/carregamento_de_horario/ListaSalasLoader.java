@@ -13,142 +13,158 @@ import java.util.Map;
 
 import com.opencsv.exceptions.CsvException;
 
-//Este package contem implementado os pontos 1. e 2. do projeto.
-//O objetivo é o carregamento de um horário a partir do ficheiro do horário CSV
-
+/**
+ * Esta classe fornece funcionalidades para carregamento e processamento de dados relacionados às salas de aula.
+ * Este pacote contém implementados os pontos 1 e 2 do projeto, com o objetivo de carregar um horário a partir do arquivo CSV do horário.
+ */
 public class ListaSalasLoader {
 
-	////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Carrega os registros de um arquivo CSV, excluindo o cabeçalho.
+     *
+     * @param csvFilePath Caminho do arquivo CSV.
+     * @return Lista de listas de strings representando os registros do arquivo CSV.
+     * @throws IOException Se ocorrer um erro de E/S durante a leitura do arquivo.
+     * @throws CsvException Se ocorrer um erro durante o processamento do CSV.
+     */
+    public static List<List<String>> loadRegistrosFromCSV(String csvFilePath) throws IOException, CsvException {
+        if (csvFilePath == null || csvFilePath.isEmpty()) {
+            System.out.println("O caminho do arquivo CSV não pode ser nulo ou vazio.");
+            return null;
+        }
 
-	// Este código corre quando o botão, dentro da TAB Carregament_Horario é
-	// pressionado
-	// Abre em HTML um ficheiro CSV contendo o Horario completo do ISCTE
+        List<List<String>> records = new ArrayList<>();
 
-	////////////////////////////////////////////////////////////////////////////////
+        try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
+            String line;
+            br.readLine();
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(";");
+                records.add(Arrays.asList(values));
+            }
+        }
 
-	public static List<List<String>> loadRegistrosFromCSV(String csvFilePath) throws IOException, CsvException {
-		if (csvFilePath == null || csvFilePath.isEmpty()) {
-			System.out.println("O caminho do arquivo CSV não pode ser nulo ou vazio.");
-			return null;
-		}
+        return records;
+    }
 
-		List<List<String>> records = new ArrayList<>();
+    /**
+     * Lê os nomes das colunas de um arquivo CSV.
+     *
+     * @param csvFilePath Caminho do arquivo CSV.
+     * @return Lista de strings que representa os nomes das colunas.
+     * @throws IOException Se ocorrer um erro de E/S durante a leitura do arquivo.
+     */
+    public static List<String> lerNomesColunasDoCSV(String csvFilePath) throws IOException {
+        if (csvFilePath == null || csvFilePath.isEmpty()) {
+            System.out.println("O caminho do arquivo CSV não pode ser nulo ou vazio.");
+            return null;
+        }
 
-		try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
-			String line;
-			// br.readLine() de modo a ignorar a linha do cabeçalho, já que
-			// esta função lê apenas os dados (registros)
-			// do horário sem o nome das colunas
-			br.readLine();
-			while ((line = br.readLine()) != null) {
-				String[] values = line.split(";");
-				records.add(Arrays.asList(values));
-			}
-		}
+        List<String> headerColumns = new ArrayList<>();
 
-		return records;
-	}
+        try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
+            String headerLine = br.readLine();
+            if (headerLine != null) {
+                String[] columns = headerLine.split(";");
+                headerColumns.addAll(Arrays.asList(columns));
+            }
+        }
 
-	public static List<String> lerNomesColunasDoCSV(String csvFilePath) throws IOException {
-		if (csvFilePath == null || csvFilePath.isEmpty()) {
-			System.out.println("O caminho do arquivo CSV não pode ser nulo ou vazio.");
-			return null;
-		}
+        return headerColumns;
+    }
 
-		List<String> headerColumns = new ArrayList<>();
+    /**
+     * Processa a caracterização das salas a partir de um arquivo CSV.
+     *
+     * @param csvFilePath Caminho do arquivo CSV.
+     * @return Mapa que associa o nome da sala a um valor associado.
+     * @throws IOException Se ocorrer um erro de E/S durante a leitura do arquivo.
+     */
+    public static Map<String, Integer> processarCaracterizacaoDasSalas(String csvFilePath) throws IOException {
+        Map<String, Integer> salaMap = new HashMap<>();
 
-		try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
-			String headerLine = br.readLine();
-			if (headerLine != null) {
-				String[] columns = headerLine.split(";");
-				headerColumns.addAll(Arrays.asList(columns));
-			}
-		}
+        try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
+            br.readLine();
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(";");
+                if (values.length >= 3) {
+                    String sala = values[1].trim();
+                    int valorAssociado = Integer.parseInt(values[2].trim());
+                    salaMap.put(sala, valorAssociado);
+                }
+            }
+        }
 
-		return headerColumns;
-	}
+        return salaMap;
+    }
 
-	public static Map<String, Integer> processarCaracterizacaoDasSalas(String csvFilePath) throws IOException {
-		Map<String, Integer> salaMap = new HashMap<>();
+    /**
+     * Carrega o horário a partir de um arquivo CSV e gera conteúdo HTML.
+     *
+     * @param csvFilePath Caminho do arquivo CSV.
+     * @return Conteúdo HTML gerado a partir do horário.
+     * @throws IOException Se ocorrer um erro de E/S durante a leitura do arquivo.
+     * @throws CsvException Se ocorrer um erro durante o processamento do CSV.
+     */
+    public static String loadHorarioFromCSV(String csvFilePath) throws IOException, CsvException {
+        if (csvFilePath == null || csvFilePath.isEmpty()) {
+            System.out.println("O caminho do arquivo CSV não pode ser nulo ou vazio.");
+            return null;
+        }
 
-		try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
-			br.readLine();
-			String line;
-			while ((line = br.readLine()) != null) {
-				String[] values = line.split(";");
-				if (values.length >= 3) {
-					String sala = values[1].trim();
-					int valorAssociado = Integer.parseInt(values[2].trim());
-					salaMap.put(sala, valorAssociado);
-				}
-			}
-		}
+        List<List<String>> records = loadRegistrosFromCSV(csvFilePath);
 
-		return salaMap;
-	}
+        String[] headerColumns = (lerNomesColunasDoCSV(csvFilePath)).toArray(new String[0]);
 
-	public static String loadHorarioFromCSV(String csvFilePath) throws IOException, CsvException {
-		if (csvFilePath == null || csvFilePath.isEmpty()) {
-			System.out.println("O caminho do arquivo CSV não pode ser nulo ou vazio.");
-			return null;
-		}
+        StringBuilder htmlContent = new StringBuilder();
+        htmlContent.append("<html lang='en' xmlns='http://www.w3.org/1999/xhtml'>\n" + "	<head>\n"
+                + "		<meta charset='utf-8' />\n"
+                + "		<link href='https://unpkg.com/tabulator-tables@4.8.4/dist/css/tabulator.min.css' rel='stylesheet'>\n"
+                + "		<script type='text/javascript' src='https://unpkg.com/tabulator-tables@4.8.4/dist/js/tabulator.min.js'></script>\n"
+                + "	</head>\n" + "	<body>\n" + "		<H1>Tipos de Salas de Aula</H1>	\n"
+                + "		<div id='example-table'></div>\n" + "\n" + "		<script type='text/javascript'>\n" + "\n"
+                + "			var tabledata = [ \n");
 
-		List<List<String>> records = loadRegistrosFromCSV(csvFilePath);
+        for (Iterator<List<String>> rowIterator = records.iterator(); rowIterator.hasNext();) {
+            List<String> row = (List<String>) rowIterator.next();
+            htmlContent.append("\t{");
 
-		String[] headerColumns = (lerNomesColunasDoCSV(csvFilePath)).toArray(new String[0]);
+            Iterator<String> columnIterator = row.iterator();
+            int columnIndex = 0;
 
-		StringBuilder htmlContent = new StringBuilder();
-		htmlContent.append("<html lang='en' xmlns='http://www.w3.org/1999/xhtml'>\n" + "	<head>\n"
-				+ "		<meta charset='utf-8' />\n"
-				+ "		<link href='https://unpkg.com/tabulator-tables@4.8.4/dist/css/tabulator.min.css' rel='stylesheet'>\n"
-				+ "		<script type='text/javascript' src='https://unpkg.com/tabulator-tables@4.8.4/dist/js/tabulator.min.js'></script>\n"
-				+ "	</head>\n" + "	<body>\n" + "		<H1>Tipos de Salas de Aula</H1>	\n"
-				+ "		<div id='example-table'></div>\n" + "\n" + "		<script type='text/javascript'>\n" + "\n"
-				+ "			var tabledata = [ \n");
+            while (columnIterator.hasNext()) {
+                String column = columnIterator.next();
+                String columnName = "coluna" + columnIndex;
 
-		for (Iterator<List<String>> rowIterator = records.iterator(); rowIterator.hasNext();) {
-			List<String> row = (List<String>) rowIterator.next();
-			htmlContent.append("\t{");
+                htmlContent.append(columnName).append(": '").append(column).append("',");
 
-			// Adiciona cada coluna ao objeto JavaScript
-			Iterator<String> columnIterator = row.iterator();
-			int columnIndex = 0;
+                if (columnIterator.hasNext()) {
+                    htmlContent.append("\n\t");
+                }
 
-			while (columnIterator.hasNext()) {
-				String column = columnIterator.next();
+                columnIndex++;
+            }
 
-				// Extrai o nome da coluna (por exemplo, colunaCurso) da lista de registros
-				String columnName = "coluna" + columnIndex;
+            htmlContent.append("},\n");
+        }
+        htmlContent.append("];\n" + "			var table = new Tabulator('#example-table', {\n"
+                + "				data:tabledata,\n" + "				layout:'fitDatafill',\n"
+                + "				pagination:'local',\n" + "				paginationSize:10,\n"
+                + "				paginationSizeSelector:[5, 10, 20, 40],\n" + "				movableColumns:true,\n"
+                + "				paginationCounter:'rows',\n"
+                + "				initialSort:[{column:'building',dir:'asc'},],\n" + "				columns:[\n");
 
-				// Adiciona a coluna ao objeto JavaScript
-				htmlContent.append(columnName).append(": '").append(column).append("',");
+        for (int columnIndex = 0; columnIndex < headerColumns.length; columnIndex++) {
+            htmlContent.append("					{title:'").append(headerColumns[columnIndex])
+                    .append("', field:'coluna").append(columnIndex).append("', headerFilter:'input'},\n");
+        }
 
-				if (columnIterator.hasNext()) {
-					htmlContent.append("\n\t");
-				}
+        htmlContent
+                .append("				],\n" + "			});\n" + "		</script>\n" + "	</body>\n" + "</html>");
 
-				columnIndex++;
-			}
-
-			htmlContent.append("},\n");
-		}
-		htmlContent.append("];\n" + "			var table = new Tabulator('#example-table', {\n"
-				+ "				data:tabledata,\n" + "				layout:'fitDatafill',\n"
-				+ "				pagination:'local',\n" + "				paginationSize:10,\n"
-				+ "				paginationSizeSelector:[5, 10, 20, 40],\n" + "				movableColumns:true,\n"
-				+ "				paginationCounter:'rows',\n"
-				+ "				initialSort:[{column:'building',dir:'asc'},],\n" + "				columns:[\n");
-
-		// Ajuste: começamos a partir do segundo elemento
-		for (int columnIndex = 0; columnIndex < headerColumns.length; columnIndex++) {
-			htmlContent.append("					{title:'").append(headerColumns[columnIndex])
-					.append("', field:'coluna").append(columnIndex).append("', headerFilter:'input'},\n");
-		}
-
-		htmlContent
-				.append("				],\n" + "			});\n" + "		</script>\n" + "	</body>\n" + "</html>");
-
-		return htmlContent.toString();
-	}
+        return htmlContent.toString();
+    }
 
 }
+

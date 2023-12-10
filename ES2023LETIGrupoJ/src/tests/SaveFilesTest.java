@@ -6,8 +6,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import carregamento_de_horário.HorarioLoader;
-import carregamento_de_horário.SaveFiles;
+import carregamento_de_horario.HorarioLoader;
+import carregamento_de_horario.SaveFiles;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

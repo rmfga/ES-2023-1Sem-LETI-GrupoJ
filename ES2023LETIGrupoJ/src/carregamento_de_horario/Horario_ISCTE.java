@@ -1,4 +1,4 @@
-package carregamento_de_horário;
+package carregamento_de_horario;
 
 import java.io.IOException;
 import java.util.ArrayList;

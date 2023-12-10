@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import com.opencsv.exceptions.CsvException;
 
-import carregamento_de_horário.HorarioLoader;
+import carregamento_de_horario.HorarioLoader;
 
 import java.io.File;
 import java.io.FileWriter;

@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import com.opencsv.exceptions.CsvException;
 
-import carregamento_de_horário.ListaSalasLoader;
+import carregamento_de_horario.ListaSalasLoader;
 
 import static org.junit.jupiter.api.Assertions.*;
 import java.io.File;

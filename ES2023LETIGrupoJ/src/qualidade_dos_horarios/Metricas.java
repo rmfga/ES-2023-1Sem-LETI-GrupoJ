@@ -16,7 +16,7 @@ import javax.swing.JOptionPane;
 
 import com.opencsv.exceptions.CsvException;
 
-import carregamento_de_horário.Horario_ISCTE;
+import carregamento_de_horario.Horario_ISCTE;
 
 //Este package contem implementado os ponto 5. 6. e 7. do projeto.
 //O objetivo é que o utilizador escolha a métrica que pretende vizualizar na Tabela HTML

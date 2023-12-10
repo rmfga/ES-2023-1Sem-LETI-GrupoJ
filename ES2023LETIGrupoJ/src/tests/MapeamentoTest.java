@@ -15,7 +15,7 @@ import org.junit.Test;
 
 import com.opencsv.exceptions.CsvException;
 
-import carregamento_de_horário.Horario_ISCTE;
+import carregamento_de_horario.Horario_ISCTE;
 import mapeamento.Mapeamento;
 
 /**

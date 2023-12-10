@@ -10,11 +10,11 @@ import java.util.List;
 
 import com.opencsv.exceptions.CsvException;
 
+import carregamento_de_horario.ListaSalas_ISCTE;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import carregamento_de_horário.ListaSalas_ISCTE;
 
 /**
  * Classe de teste para ListaSalas_ISCTE.

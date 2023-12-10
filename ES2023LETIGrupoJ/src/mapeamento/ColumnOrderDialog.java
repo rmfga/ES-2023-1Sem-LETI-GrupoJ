@@ -29,7 +29,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.TransferHandler;
 import javax.swing.border.EmptyBorder;
 
-import carregamento_de_horário.Horario_ISCTE;
+import carregamento_de_horario.Horario_ISCTE;
 
 public class ColumnOrderDialog extends JDialog {
 	private DefaultListModel<String> listModel;

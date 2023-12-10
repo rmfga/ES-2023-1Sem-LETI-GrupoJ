@@ -1,4 +1,4 @@
-package carregamento_de_horário;
+package carregamento_de_horario;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

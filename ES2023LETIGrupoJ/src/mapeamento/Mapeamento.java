@@ -7,7 +7,7 @@ import java.util.Map;
 
 import com.opencsv.exceptions.CsvException;
 
-import carregamento_de_horário.Horario_ISCTE;
+import carregamento_de_horario.Horario_ISCTE;
 
 //Este package contem implementado os pontos 3. e 4. do projeto.
 //O objetivo é existir um mapeamento entre os campos dos ficheiros CSV e os campos de ordem definidos no ficheiro de Ordem.

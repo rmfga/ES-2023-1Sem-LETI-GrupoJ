@@ -15,11 +15,13 @@ import com.opencsv.exceptions.CsvException;
  * A classe Horario_ISCTE representa um horário do ISCTE, que oferece funcionalidades relacionadas ao carregamento e manipulação dos dados.
  */
 public class Horario_ISCTE {
+
     private List<List<String>> horario;        // Representa os registros do horário
     private String htmlContent;                // Conteúdo HTML do horário
     private boolean horarioCarregado;          // Indica se o horário foi carregado
     private List<String> headerColumns;        // Nomes das colunas do horário
     private List<String> columnOrder;          // Ordem das colunas no horário
+    private String horarioCsvFilePath;
 
     /**
      * Construtor da classe Horario_ISCTE.
@@ -31,6 +33,7 @@ public class Horario_ISCTE {
         this.horarioCarregado = false;
         this.headerColumns = new ArrayList<>();
         this.columnOrder = columnOrderDefault();
+        this.horarioCsvFilePath = "";
     }
 
     /**
@@ -48,6 +51,14 @@ public class Horario_ISCTE {
             this.headerColumns = HorarioLoader.lerNomesColunasDoCSV(csvFilePath);
         }
     }
+    
+    public String getHorarioCsvFilePath() {
+		return horarioCsvFilePath;
+	}
+
+	public void setHorarioCsvFilePath(String horarioCsvFilePath) {
+		this.horarioCsvFilePath = horarioCsvFilePath;
+	}
 
     /**
      * Obtém os registos do horário.
@@ -118,7 +129,7 @@ public class Horario_ISCTE {
      * @return Lista de strings que representa a ordem das colunas.
      */
     public List<String> getColumnOrder() {
-        System.out.println(columnOrder);
+        
         return columnOrder;
     }
 

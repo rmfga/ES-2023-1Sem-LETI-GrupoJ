@@ -84,6 +84,7 @@ public class ColumnOrderDialog extends JDialog {
         JScrollPane scrollPane = new JScrollPane(columnList);
         JScrollPane scrollPane1 = new JScrollPane(columnList1);
 
+
         okButton = new JButton("OK");
         okButton.addActionListener(new ActionListener() {
             @Override
@@ -91,6 +92,7 @@ public class ColumnOrderDialog extends JDialog {
                 dispose();
             }
         });
+
 
         JPanel leftPanel = new JPanel(new BorderLayout());
         leftPanel.add(scrollPane, BorderLayout.WEST);
@@ -128,6 +130,7 @@ public class ColumnOrderDialog extends JDialog {
             }
         });
     }
+
 
     /**
      * Obtém a ordem personalizada das colunas.

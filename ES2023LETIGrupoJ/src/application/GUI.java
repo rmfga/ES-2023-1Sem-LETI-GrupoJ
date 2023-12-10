@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 import javax.swing.JButton;
@@ -50,7 +51,7 @@ public class GUI extends JFrame {
 	 * ListaSalas_ISCTE.
 	 */
 	public GUI() {
-		super("A Minha Aplicação");
+		super("A Minha Aplicacao");
 		horarioISCTE = new Horario_ISCTE();
 		salasISCTE = new ListaSalas_ISCTE();
 		diretorioEscolhido = null;
@@ -79,10 +80,12 @@ public class GUI extends JFrame {
 	 */
 	private static JPanel createTab1Content() {
 		JPanel tab1Panel = new JPanel();
-		JButton button = new JButton("Carregar Horário");
+		JButton button = new JButton("Carregar Horario");
+		JButton button2 = new JButton("Carregar novo Horario");
 		button.setToolTipText(
-				"Carregar horário a partir de um ficheiro CSV e visualizá-lo no browser web, sob a forma de tabela");
+				"Carregar horario a partir de um ficheiro CSV e visualiza-lo no browser web, sob a forma de tabela");
 		button.setBounds(20, 20, 250, 250);
+		button2.setBounds(20, 20, 250, 250);
 
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -97,9 +100,9 @@ public class GUI extends JFrame {
 						if (userChoice == JOptionPane.NO_OPTION) {
 							return; // O usuário escolheu não continuar
 						} else {
-							Object[] options = { "Horário", "Lista de Salas" };
+							Object[] options = { "Horario", "Lista de Salas" };
 							int choice = JOptionPane.showOptionDialog(null, "Escolha qual conteúdo HTML visualizar:",
-									"Escolha de Conteúdo", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
+									"Escolha de Conteudo", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
 									null, options, options[0]);
 
 							String htmlContent;
@@ -122,7 +125,7 @@ public class GUI extends JFrame {
 								if (!horarioISCTE.isHorarioCarregado() || !salasISCTE.isSalasCarregada()) {
 									JFileChooser fileChooser = new JFileChooser();
 
-									fileChooser.setDialogTitle("Selecione o ficheiro CSV do horário");
+									fileChooser.setDialogTitle("Selecione o ficheiro CSV do horario");
 									fileChooser.setFileFilter(new FileNameExtensionFilter("Arquivos CSV", "csv"));
 
 									int result = fileChooser.showOpenDialog(null);
@@ -130,9 +133,13 @@ public class GUI extends JFrame {
 									if (result == JFileChooser.APPROVE_OPTION) {
 										String horarioCsvFilePath = fileChooser.getSelectedFile().getAbsolutePath();
 
+										horarioISCTE.setHorarioCsvFilePath(horarioCsvFilePath);
+
 										diretorioEscolhido = fileChooser.getSelectedFile().getParent();
 
 										horarioISCTE.carregarHorario(horarioCsvFilePath);
+
+										tab1Panel.add(button2);
 
 										JFileChooser salasFileChooser = new JFileChooser();
 										salasFileChooser.setDialogTitle("Selecione o ficheiro CSV das salas");
@@ -155,12 +162,12 @@ public class GUI extends JFrame {
 
 											salasISCTE.carregarListaSalas(salasCsvFilePath);
 
-											button.setText("Alterar visualização");
+											button.setText("Alterar visualizacao");
 
 											// Escolher qual conteúdo HTML visualizar
-											Object[] options = { "Horário", "Lista de Salas" };
+											Object[] options = { "Horario", "Lista de Salas" };
 											int choice = JOptionPane.showOptionDialog(null,
-													"Escolha qual conteúdo HTML visualizar:", "Escolha de Conteúdo",
+													"Escolha qual conteudo HTML visualizar:", "Escolha de Conteudo",
 													JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null,
 													options, options[0]);
 
@@ -192,6 +199,51 @@ public class GUI extends JFrame {
 		});
 
 		tab1Panel.add(button);
+
+		button2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					SwingWorker<Void, Void> worker = new SwingWorker<>() {
+						@Override
+						protected Void doInBackground() {
+							try {
+								JFileChooser fileChooser = new JFileChooser();
+								fileChooser.setDialogTitle("Selecione o arquivo CSV do horário");
+								fileChooser.setFileFilter(new FileNameExtensionFilter("Arquivos CSV", "csv"));
+
+								int result = fileChooser.showOpenDialog(null);
+
+								if (result == JFileChooser.APPROVE_OPTION) {
+									String csvFilePath = fileChooser.getSelectedFile().getAbsolutePath();
+
+									if (horarioISCTE.getHorarioCsvFilePath().equals(csvFilePath)) {
+										// Se os caminhos forem iguais, exibe um aviso e retorna
+										JOptionPane.showMessageDialog(null,
+												"O novo ficheiro selecionado já se encontra carregado na aplicação",
+												"Aviso", JOptionPane.WARNING_MESSAGE);
+										return null;
+									}
+
+									// Se os caminhos não forem iguais, continua o restante do método
+									horarioISCTE.carregarHorario(csvFilePath);
+
+									String htmlContent = HorarioLoader.loadHorarioFromCSV(csvFilePath);
+
+									SaveFiles.salvarArquivoHTML(htmlContent);
+								}
+							} catch (IOException | CsvException ex) {
+								ex.printStackTrace();
+							}
+							return null;
+						}
+					};
+
+					worker.execute();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
 
 		return tab1Panel;
 	}

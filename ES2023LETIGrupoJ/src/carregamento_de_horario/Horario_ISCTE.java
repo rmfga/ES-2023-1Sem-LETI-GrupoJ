@@ -60,7 +60,11 @@ public class Horario_ISCTE {
 		this.horarioCsvFilePath = horarioCsvFilePath;
 	}
 
-    /**
+    public void setHorarioCarregado(boolean horarioCarregado) {
+		this.horarioCarregado = horarioCarregado;
+	}
+
+	/**
      * Obtém os registos do horário.
      *
      * @return Lista de listas de strings representando os registos do horário.
@@ -90,7 +94,7 @@ public class Horario_ISCTE {
     /**
      * Adiciona registos ao horário.
      *
-     * @param registos Lista de listas de strings que representa os registos a serem adicionados.
+     * @param registros Lista de listas de strings que representa os registos a serem adicionados.
      */
     public void adicionarRegistrosAoHorario(List<List<String>> registros) {
         horario.addAll(registros);
@@ -109,7 +113,7 @@ public class Horario_ISCTE {
      * Obtém o índice de uma coluna pelo seu nome.
      *
      * @param columnName Nome da coluna.
-     * @return Índice da coluna ou -1 se a coluna não for encontrada.
+     * @return Indice da coluna ou -1 se a coluna não for encontrada.
      */
     public int getColumnIndex(String columnName) {
         List<String> headerColumns = getHeaderColumns();

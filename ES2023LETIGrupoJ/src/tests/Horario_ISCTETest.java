@@ -83,7 +83,16 @@ public class Horario_ISCTETest {
     public void testGetHorario() {
         assertNotNull(horarioISCTE.getHorario());
     }
-
+    
+    /**
+     * Testa o método {@link Horario_ISCTE#getHorarioCsvFilePath()}.
+     * Verifica se o conteúdo HTML é uma string vazia inicialmente.
+     */
+    @Test
+    public void testGetHorarioCsvFilePath() {
+        assertEquals("", horarioISCTE.getHorarioCsvFilePath());
+    }
+    
     /**
      * Testa o método {@link Horario_ISCTE#getHtmlContent()}.
      * Verifica se o conteúdo HTML é uma string vazia inicialmente.

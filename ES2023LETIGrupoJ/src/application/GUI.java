@@ -223,7 +223,7 @@ public class GUI extends JFrame {
 												"Aviso", JOptionPane.WARNING_MESSAGE);
 										return null;
 									}
-
+									horarioISCTE.setHorarioCarregado(false);
 									// Se os caminhos não forem iguais, continua o restante do método
 									horarioISCTE.carregarHorario(csvFilePath);
 

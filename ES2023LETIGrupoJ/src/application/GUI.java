@@ -45,8 +45,9 @@ public class GUI extends JFrame {
 	public void createAndShowGUI() {
 		JTabbedPane tabbedPane = new JTabbedPane();
 		tabbedPane.addTab("CARREGAMENTO_HORÁRIO", createTab1Content());
-		tabbedPane.addTab("GESTÃO_DAS_MÉTRICAS", createTab2Content());
 		tabbedPane.addTab("MAPEAMENTO", createTab3Content());
+		tabbedPane.addTab("GESTÃO_DAS_MÉTRICAS", createTab2Content());
+		
 
 		add(tabbedPane);
 
@@ -300,11 +301,16 @@ public class GUI extends JFrame {
 					}
 
 					String htmlContent = Mapeamento.loadHorarioFromCSV_CustomOrder(horarioISCTE, customOrder);
+					
+					horarioISCTE.carregarHorario(htmlContent);
 
 					SaveFiles.salvarArquivoHTML(htmlContent);
 
 				} catch (IOException ex) {
 					ex.printStackTrace();
+				} catch (CsvException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
 			}
 		});

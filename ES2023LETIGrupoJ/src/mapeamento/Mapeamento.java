@@ -1,10 +1,12 @@
 package mapeamento;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import com.opencsv.exceptions.CsvException;
+
 import carregamento_de_horário.Horario_ISCTE;
 
 //Este package contem implementado os pontos 3. e 4. do projeto.
@@ -13,7 +15,7 @@ import carregamento_de_horário.Horario_ISCTE;
 public class Mapeamento {
 
 	public static String loadHorarioFromCSV_CustomOrder(Horario_ISCTE horarioISCTE, List<String> customOrder)
-			throws IOException {
+			throws IOException, CsvException {
 		List<List<String>> horario = horarioISCTE.getHorario();
 
 		// Mapa para mapear nomes originais para identificadores JS amigáveis
@@ -65,8 +67,12 @@ public class Mapeamento {
 
 		htmlContent
 				.append("				],\n" + "			});\n" + "		</script>\n" + "	</body>\n" + "</html>");
+		
+		String htmlContent1 = htmlContent.toString();
+		
+//		horarioISCTE.carregarHorario(htmlContent1);
 
-		return htmlContent.toString();
+		return htmlContent1;
 	}
 
 	////////////////////////////////////////////////////////////////////////////////

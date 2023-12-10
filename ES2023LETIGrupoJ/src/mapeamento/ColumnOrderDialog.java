@@ -1,7 +1,6 @@
 package mapeamento;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.datatransfer.DataFlavor;
@@ -12,13 +11,15 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
+
 import javax.swing.DefaultListModel;
 import javax.swing.DropMode;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -27,6 +28,7 @@ import javax.swing.JSplitPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.TransferHandler;
 import javax.swing.border.EmptyBorder;
+
 import carregamento_de_horário.Horario_ISCTE;
 
 public class ColumnOrderDialog extends JDialog {
@@ -56,8 +58,8 @@ public class ColumnOrderDialog extends JDialog {
 			listModel.addElement(columnName);
 		}
 
-		originalOrder1 = new ArrayList<>(horarioISCTE.getHeaderColumns());
-		for (String columnName : originalOrder) {
+		originalOrder1 = horarioISCTE.getColumnOrder();
+		for (String columnName : originalOrder1) {
 			listModel1.addElement(columnName);
 		}
 
@@ -116,8 +118,32 @@ public class ColumnOrderDialog extends JDialog {
 				}
 			}
 		});
-	}
 
+//		// Adicione um ouvinte de teclado para excluir a coluna quando a tecla "Delete"
+//		// é pressionada
+//		columnList.addKeyListener(new KeyAdapter() {
+//			@Override
+//			public void keyPressed(KeyEvent e) {
+//				if (e.getKeyCode() == KeyEvent.VK_DELETE) {
+//					int selectedIndex = columnList.getSelectedIndex();
+//					if (selectedIndex != -1) {
+//						// Remove a coluna da lista e atualiza a exibição
+//						listModel.remove(selectedIndex);
+//						updateAlteredOrderLabel();
+//					}
+//				}
+//			}
+//		});
+	}
+//
+//	// Método para atualizar o rótulo de ordem alterada
+//	private void updateAlteredOrderLabel() {
+//		listModel.clear();
+//		for (int i = 0; i < listModel.getSize(); i++) {
+//			listModel.addElement(listModel.getElementAt(i));
+//		}
+//	}
+	
 	public List<String> getCustomOrder() {
 		alteredOrder = new ArrayList<>();
 		for (int i = 0; i < listModel.size(); i++) {
@@ -128,8 +154,8 @@ public class ColumnOrderDialog extends JDialog {
 
 	public List<String> getOriginalOrder() {
 		originalOrder = new ArrayList<>();
-		for (int i = 0; i < listModel.size(); i++) {
-			originalOrder.add(listModel.getElementAt(i));
+		for (int i = 0; i < listModel1.size(); i++) {
+			originalOrder.add(listModel1.getElementAt(i));
 		}
 		return originalOrder;
 	}

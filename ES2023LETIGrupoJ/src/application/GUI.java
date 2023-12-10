@@ -26,16 +26,29 @@ import mapeamento.ColumnOrderDialog;
 import mapeamento.Mapeamento;
 import qualidade_dos_horarios.Metricas;
 
+/**
+ * Classe que representa a interface gráfica da aplicação. Permite carregar
+ * horários, realizar mapeamento e gerenciar métricas.
+ */
 public class GUI extends JFrame {
 
 	private static Horario_ISCTE horarioISCTE;
 	private static ListaSalas_ISCTE salasISCTE;
 	private static String diretorioEscolhido;
 
+	/**
+	 * Retorna o diretório escolhido para carregamento de horário.
+	 * 
+	 * @return Diretório escolhido.
+	 */
 	public static String getDiretorioEscolhido() {
 		return diretorioEscolhido;
 	}
 
+	/**
+	 * Construtor da classe GUI. Inicializa as instâncias de Horario_ISCTE e
+	 * ListaSalas_ISCTE.
+	 */
 	public GUI() {
 		super("A Minha Aplicação");
 		horarioISCTE = new Horario_ISCTE();
@@ -43,12 +56,14 @@ public class GUI extends JFrame {
 		diretorioEscolhido = null;
 	}
 
+	/**
+	 * Método para criar e exibir a interface gráfica.
+	 */
 	public void createAndShowGUI() {
 		JTabbedPane tabbedPane = new JTabbedPane();
 		tabbedPane.addTab("CARREGAMENTO_HORARIO", createTab1Content());
 		tabbedPane.addTab("MAPEAMENTO", createTab3Content());
 		tabbedPane.addTab("GESTAO_DAS_METRICAS", createTab2Content());
-		
 
 		add(tabbedPane);
 
@@ -57,6 +72,11 @@ public class GUI extends JFrame {
 		setVisible(true);
 	}
 
+	/**
+	 * Método para criar o conteúdo da primeira aba (CARREGAMENTO_HORARIO).
+	 * 
+	 * @return JPanel com o conteúdo da aba.
+	 */
 	private static JPanel createTab1Content() {
 		JPanel tab1Panel = new JPanel();
 		JButton button = new JButton("Carregar Horário");
@@ -176,6 +196,11 @@ public class GUI extends JFrame {
 		return tab1Panel;
 	}
 
+	/**
+	 * Método para criar o conteúdo da segunda aba (GESTAO_DAS_METRICAS).
+	 * 
+	 * @return JPanel com o conteúdo da aba.
+	 */
 	private static JPanel createTab2Content() {
 		JPanel tab2Panel = new JPanel();
 
@@ -273,6 +298,11 @@ public class GUI extends JFrame {
 		return tab2Panel;
 	}
 
+	/**
+	 * Método para criar o conteúdo da terceira aba (MAPEAMENTO).
+	 * 
+	 * @return JPanel com o conteúdo da aba.
+	 */
 	private static JPanel createTab3Content() {
 		JPanel tab3Panel = new JPanel();
 
@@ -302,7 +332,7 @@ public class GUI extends JFrame {
 					}
 
 					String htmlContent = Mapeamento.loadHorarioFromCSV_CustomOrder(horarioISCTE, customOrder);
-					
+
 					horarioISCTE.carregarHorario(htmlContent);
 
 					SaveFiles.salvarArquivoHTML(htmlContent);
@@ -320,5 +350,4 @@ public class GUI extends JFrame {
 
 		return tab3Panel;
 	}
-
 }

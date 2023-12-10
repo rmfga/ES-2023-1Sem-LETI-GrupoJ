@@ -134,7 +134,7 @@ public class GUI extends JFrame {
 
 											salasISCTE.carregarListaSalas(salasCsvFilePath);
 
-											button.setText("Alterar vizualização");
+											button.setText("Alterar visualização");
 
 											// Escolher qual conteúdo HTML visualizar
 											Object[] options = { "Horário", "Lista de Salas" };

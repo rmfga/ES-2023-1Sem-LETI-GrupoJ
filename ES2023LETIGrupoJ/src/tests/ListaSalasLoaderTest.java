@@ -60,13 +60,9 @@ public class ListaSalasLoaderTest {
 	 */
 	@Test
 	public void testProcessarCaracterizacaoDasSalas() throws IOException {
-		// Arrange
-		createCSVFile(CSV_FILE);
 
-		// Act
 		Map<String, Integer> salaMap = ListaSalasLoader.processarCaracterizacaoDasSalas(CSV_FILE);
 
-		// Assert
 		assertNotNull(salaMap);
 		assertEquals(2, salaMap.size());
 		assertEquals(50, salaMap.get("Sala A"));

@@ -94,6 +94,30 @@ public class Horario_ISCTETest {
     }
 
     /**
+     * Testa o método {@link Horario_ISCTE#getColumnOrder()}.
+     * Verifica se a ordem das colunas padrão é retornada corretamente.
+     */
+    @Test
+    public void testGetColumnOrder() {
+        List<String> expectedColumnOrder = Arrays.asList(
+            "Curso",
+            "Unidade Curricular",
+            "Turno",
+            "Turma",
+            "Inscritos no turno",
+            "Dia da semana",
+            "Hora início da aula",
+            "Hora fim da aula",
+            "Data da aula",
+            "Características da sala pedida para a aula",
+            "Sala atribuída à aula"
+        );
+        List<String> actualColumnOrder = horarioISCTE.getColumnOrder();
+        assertNotNull(actualColumnOrder);
+        assertEquals(expectedColumnOrder, actualColumnOrder);
+    }
+
+    /**
      * Testa o método {@link Horario_ISCTE#adicionarRegistrosAoHorario(List)}.
      * Verifica se novos registros são adicionados corretamente ao horário.
      *

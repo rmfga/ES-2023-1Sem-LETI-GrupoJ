@@ -61,9 +61,7 @@ public class HorarioLoaderTest {
         assertTrue(actualHtml.contains("var table = new Tabulator('#example-table', {"));
     }
 
-    public void testLoadHorarioFromCSVWithNullCsvFilePath() throws IOException, CsvException {
-        assertNull(HorarioLoader.loadHorarioFromCSV(null));
-    }
+
 
     /**
      * Testa o carregamento do horário a partir de um caminho vazio.

@@ -91,8 +91,8 @@ public class SaveFilesTest {
     @Test
     public void testSaveHTMLToFileWithNullHtmlContent() throws IOException {
         // Tenta guardar conteúdo nulo em um arquivo
-        SaveFiles.saveHTMLToFile(HTML_FILE, null);
-        assertFalse(new File(HTML_FILE).exists());
+        SaveFiles.saveHTMLToFile("teste.html", null);
+        assertFalse(new File("teste.html").exists());
     }
 
     /**
@@ -104,8 +104,8 @@ public class SaveFilesTest {
     @Test
     public void testSaveHTMLToFileWithEmptyHtmlContent() throws IOException {
         // Tenta guardar conteúdo vazio em um arquivo
-        SaveFiles.saveHTMLToFile(HTML_FILE, "");
-        assertFalse(new File(HTML_FILE).exists());
+        SaveFiles.saveHTMLToFile("teste.html", "");
+        assertFalse(new File("teste.html").exists());
     }
 
     /**

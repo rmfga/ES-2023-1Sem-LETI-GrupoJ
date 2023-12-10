@@ -93,6 +93,35 @@ public class Horario_ISCTETest {
         assertEquals("", horarioISCTE.getHorarioCsvFilePath());
     }
     
+    @Test
+    public void testSetHorarioCsvFilePath() {
+        Horario_ISCTE horario = new Horario_ISCTE();
+
+        // Teste 1: Definir o caminho do arquivo CSV
+        String caminhoArquivo = "caminho/do/arquivo.csv";
+        horario.setHorarioCsvFilePath(caminhoArquivo);
+
+        // Verificar se o caminho do arquivo foi definido corretamente
+        assertEquals(caminhoArquivo, horario.getHorarioCsvFilePath());
+    }
+
+    @Test
+    public void testSetHorarioCarregado() {
+        Horario_ISCTE horario = new Horario_ISCTE();
+
+        // Teste 2: Definir o horário como carregado
+        horario.setHorarioCarregado(true);
+
+        // Verificar se o horário foi definido como carregado corretamente
+        assertTrue(horario.isHorarioCarregado());
+
+        // Teste 3: Definir o horário como não carregado
+        horario.setHorarioCarregado(false);
+
+        // Verificar se o horário foi definido como não carregado corretamente
+        assertFalse(horario.isHorarioCarregado());
+    }
+    
     /**
      * Testa o método {@link Horario_ISCTE#getHtmlContent()}.
      * Verifica se o conteúdo HTML é uma string vazia inicialmente.

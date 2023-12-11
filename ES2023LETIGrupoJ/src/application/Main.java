@@ -2,6 +2,7 @@ package application;
 
 import javax.swing.SwingUtilities;
 
+
 /**
  * Classe principal que contém o método main para iniciar a aplicação.
  */

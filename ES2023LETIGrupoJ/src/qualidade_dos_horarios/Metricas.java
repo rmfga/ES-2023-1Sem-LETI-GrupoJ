@@ -59,6 +59,7 @@ List<List<String>> horario = horarioISCTE.getHorario();
 
 		}).collect(Collectors.toList());
 
+		
 		StringBuilder htmlContent = new StringBuilder();
 		htmlContent.append("<html lang='en' xmlns='http://www.w3.org/1999/xhtml'>\n" + "	<head>\n"
 				+ "		<meta charset='utf-8' />\n"

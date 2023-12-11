@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.opencsv.exceptions.CsvException;
 
+import carregamento_de_horario.Horario_ISCTE;
 import carregamento_de_horario.ListaSalas_ISCTE;
 
 import org.junit.jupiter.api.AfterEach;
@@ -17,9 +18,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Classe de teste para ListaSalas_ISCTE.
+ * Classe de teste para {@link ListaSalas_ISCTE}.
  */
-class ListaSalas_ISCTETest {
+public class ListaSalas_ISCTETest {
 
     private static final String CSV_FILE = "teste-salas.csv";
     private ListaSalas_ISCTE listaSalasISCTE;

@@ -94,7 +94,8 @@ public class Horario_ISCTETest {
     }
     
     /**
-     * Testa o método {@link Horario_ISCTE#setHorarioCsvFilePath()}.
+     * Testa o método Horario_ISCTE.setHorarioCsvFilePath()}.
+     * Verifica se o set é feito com sucesso
      */
     @Test
     public void testSetHorarioCsvFilePath() {
@@ -109,7 +110,8 @@ public class Horario_ISCTETest {
     }
 
     /**
-     * Testa o método {@link Horario_ISCTE#setHorarioCarregado()}.
+     * Testa o metodo Horario_ISCTE.setHorarioCarregado().
+     * verifica se o set é realizado com sucesso
      */
     @Test
     public void testSetHorarioCarregado() {

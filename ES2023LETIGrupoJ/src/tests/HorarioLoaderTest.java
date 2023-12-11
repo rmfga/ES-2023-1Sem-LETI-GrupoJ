@@ -75,6 +75,12 @@ public class HorarioLoaderTest {
     }
 
 
+    /**
+     * Testa o carregamento dos registros a partir de um ficheiro CSV.
+     *
+     * @throws IOException   se houver um erro de I/O.
+     * @throws CsvException  se houver um erro relacionado ao CSV.
+     */
     @Test
     public void testLoadRegistrosFromCSV() throws IOException, CsvException {
         assertNull(HorarioLoader.loadRegistrosFromCSV(""));

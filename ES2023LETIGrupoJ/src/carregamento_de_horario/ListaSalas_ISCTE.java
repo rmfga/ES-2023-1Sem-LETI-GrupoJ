@@ -87,7 +87,7 @@ public class ListaSalas_ISCTE {
     /**
      * Adiciona registos à lista de salas.
      *
-     * @param registos Os registros a serem adicionados.
+     * @param registros Os registros a serem adicionados.
      */
     public void adicionarRegistrosAoHorario(List<List<String>> registros) {
         salas.addAll(registros);

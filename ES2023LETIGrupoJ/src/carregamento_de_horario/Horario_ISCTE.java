@@ -52,10 +52,20 @@ public class Horario_ISCTE {
         }
     }
     
+    /**
+     * Obtém o caminho do arquivo CSV do horário.
+     *
+     * @return O caminho do arquivo CSV do horário.
+     */
     public String getHorarioCsvFilePath() {
 		return horarioCsvFilePath;
 	}
 
+    /**
+     * Define o caminho do arquivo CSV do horário.
+     *
+     * @param horarioCsvFilePath O caminho do arquivo CSV do horário a ser definido.
+     */
 	public void setHorarioCsvFilePath(String horarioCsvFilePath) {
 		this.horarioCsvFilePath = horarioCsvFilePath;
 	}
@@ -133,6 +143,12 @@ public class Horario_ISCTE {
         return columnOrder;
     }
 
+    /**
+     * Define o estado de carregamento do horário.
+     *
+     * @param horarioCarregado true se o horário estiver carregado, false caso contrário.
+     */
+    
     public void setHorarioCarregado(boolean horarioCarregado) {
 		this.horarioCarregado = horarioCarregado;
 	}
